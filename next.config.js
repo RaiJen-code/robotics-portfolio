@@ -32,6 +32,8 @@ const nextConfig = {
     N8N_CONTACT_WEBHOOK: process.env.N8N_CONTACT_WEBHOOK || '',
     FORMSPREE_ID: process.env.FORMSPREE_ID || '',
     SITE_URL: process.env.SITE_URL || 'https://username.github.io',
+    // Expose basePath ke komponen React agar gambar bisa di-prefix dengan benar
+    NEXT_PUBLIC_BASE_PATH: REPO_NAME,
   },
 };
 

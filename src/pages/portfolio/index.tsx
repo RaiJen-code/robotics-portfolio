@@ -6,6 +6,7 @@ import { GetStaticProps } from 'next';
 import { Github, ExternalLink, Cpu, ArrowRight } from 'lucide-react';
 import Layout from '../../components/layout/Layout';
 import { getAllProjects, type ProjectMeta } from '../../lib/markdown';
+import { imgSrc } from '../../lib/utils';
 
 const CATEGORIES = ['All', 'Robotics', 'AI', 'IoT', 'Mechanical Design', 'Embedded'];
 
@@ -82,7 +83,7 @@ export default function PortfolioPage({ projects }: Props) {
                   <div className="w-full h-44 bg-dark-700 border border-dark-600 mb-4 relative overflow-hidden">
                     {project.coverImage ? (
                       <img
-                        src={project.coverImage}
+                        src={imgSrc(project.coverImage || '')}
                         alt={project.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />

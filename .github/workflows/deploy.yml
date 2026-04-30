@@ -62,6 +62,7 @@ jobs:
           # maka REPO_NAME = /my-portfolio
           # Jika pakai custom domain (misal raijen.dev), KOSONGKAN: REPO_NAME=
           REPO_NAME: /robotics-portfolio
+          NEXT_PUBLIC_BASE_PATH: /robotics-portfolio
 
           # ── n8n Webhooks — diambil dari GitHub Secrets ──
           N8N_CHAT_WEBHOOK: ${{ secrets.N8N_CHAT_WEBHOOK }}

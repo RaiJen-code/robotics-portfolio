@@ -9,6 +9,7 @@ import Layout from '../components/layout/Layout';
 import Hero from '../components/sections/Hero';
 import LiveChat from '../components/ui/LiveChat';
 import { getAllProjects, type ProjectMeta } from '../lib/markdown';
+import { imgSrc } from '../lib/utils';
 import { GetStaticProps } from 'next';
 
 // ── Skills Section ─────────────────────────────────────────────────────
@@ -101,7 +102,7 @@ function PortfolioSection({ projects }: { projects: ProjectMeta[] }) {
               <div className="w-full h-40 bg-dark-700 border border-dark-600 mb-4 relative overflow-hidden">
                 {project.coverImage ? (
                   <img
-                    src={project.coverImage}
+                    src={imgSrc(project.coverImage || '')}
                     alt={project.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />

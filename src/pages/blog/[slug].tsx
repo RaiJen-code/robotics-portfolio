@@ -7,6 +7,7 @@ import { id } from 'date-fns/locale';
 import { ArrowLeft, Clock, Tag, Share2, Github } from 'lucide-react';
 import Layout from '../../components/layout/Layout';
 import { getPostBySlug, getAllPostSlugs, type Post } from '../../lib/markdown';
+import { imgSrc } from '../../lib/utils';
 
 interface Props {
   post: Post;
@@ -58,7 +59,7 @@ export default function BlogPost({ post }: Props) {
           {post.coverImage && (
             <div className="w-full h-64 md:h-80 bg-dark-800 border border-dark-700 mb-8 overflow-hidden">
               <img
-                src={post.coverImage}
+                src={imgSrc(post.coverImage || '')}
                 alt={post.title}
                 className="w-full h-full object-cover"
               />
