@@ -5,7 +5,7 @@ excerpt: "AI-powered autonomous robot on Jetson Nano + CUDA. Multimodal: seeing,
 tags: ["Jetson Nano", "CUDA", "Python", "OpenCV", "GPT-4", "SQLite", "AI Robotics"]
 category: "AI"
 coverImage: "/images/projects/somebody.jpg"
-githubUrl: "https://github.com/RaiJen-code/somebody-robot"
+githubUrl: "https://github.com/RaiJen-code/SOMEBODY_Ver-2.0"
 status: "completed"
 featured: true
 tech: ["Jetson Nano", "CUDA", "Python", "OpenCV", "GPT-4 Vision", "SQLite", "ROS2", "Speech Recognition"]

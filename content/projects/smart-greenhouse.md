@@ -8,7 +8,7 @@ coverImage: "/images/projects/greenhouse.jpg"
 githubUrl: "https://github.com/RaiJenCode/smart-greenhouse"
 demoUrl: "https://greenhouse.raijen.dev"
 status: "completed"
-featured: true
+featured: false
 tech: ["ESP32", "Python", "MQTT", "Node-RED", "TensorFlow Lite", "DHT22", "MySQL"]
 ---
 

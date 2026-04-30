@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { Download, Mail, Github, Instagram, Phone, MapPin, GraduationCap, Award, ExternalLink } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { imgSrc } from '../lib/utils';
 
 // ── Data ──────────────────────────────────────────────────────────────
 
@@ -186,8 +187,8 @@ export default function AboutPage() {
 
               {/* CV Download */}
               <a
-                href="/rangga_resume.pdf"
-                download
+                href={imgSrc('/rangga_resume.pdf')}
+                download="Rangga_Prasetya_CV.pdf"
                 className="btn-outline inline-flex"
               >
                 <Download size={16} />
