@@ -1,9 +1,110 @@
 // src/pages/about.tsx
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Download, Mail, Github, Instagram, Phone, MapPin, GraduationCap, Award, ExternalLink } from 'lucide-react';
+import { Download, Mail, Github, Instagram, Phone, MapPin, GraduationCap, Award, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import { imgSrc } from '../lib/utils';
+
+// ── Photo Slideshow ────────────────────────────────────────────────────
+
+const PHOTOS = [
+  { src: '/images/about/photo-1.jpg', alt: 'Rangga Prasetya — photo 1' },
+  { src: '/images/about/photo-2.jpg', alt: 'Rangga Prasetya — photo 2' },
+  { src: '/images/about/photo-3.jpg', alt: 'Rangga Prasetya — photo 3' },
+  { src: '/images/about/photo-4.jpg', alt: 'Rangga Prasetya — photo 4' },
+  { src: '/images/about/photo-5.jpg', alt: 'Rangga Prasetya — photo 5' },
+];
+
+function PhotoSlideshow() {
+  const [current, setCurrent] = useState(0);
+
+  // Auto-rotate every 4 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent(prev => (prev + 1) % PHOTOS.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
+  function prev() {
+    setCurrent(i => (i - 1 + PHOTOS.length) % PHOTOS.length);
+  }
+  function next() {
+    setCurrent(i => (i + 1) % PHOTOS.length);
+  }
+
+  return (
+    <div className="relative w-full overflow-hidden bg-dark-800 border border-dark-600 mb-6 group"
+      style={{ aspectRatio: '4/3' }}
+    >
+      {/* Slides */}
+      {PHOTOS.map((photo, i) => (
+        <img
+          key={photo.src}
+          src={imgSrc(photo.src)}
+          alt={photo.alt}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+          style={{ opacity: i === current ? 1 : 0 }}
+          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+        />
+      ))}
+
+      {/* Fallback when no photos */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-dark-600 pointer-events-none">
+        <div className="w-16 h-16 border-2 border-dashed border-dark-600 flex items-center justify-center mb-2">
+          <span className="text-2xl">📷</span>
+        </div>
+        <span className="text-xs font-mono text-dark-600">Tambahkan foto kamu</span>
+      </div>
+
+      {/* Bottom gradient */}
+      <div className="absolute inset-0 bg-gradient-to-t from-dark-900/70 via-transparent to-transparent pointer-events-none" />
+
+      {/* Corner accent */}
+      <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-primary-500/60" />
+      <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-primary-500/60" />
+
+      {/* Counter badge */}
+      <div className="absolute top-3 right-3 bg-dark-900/70 backdrop-blur-sm text-xs font-mono text-dark-300 px-2 py-0.5 border border-dark-600">
+        {current + 1} / {PHOTOS.length}
+      </div>
+
+      {/* Dot indicators */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+        {PHOTOS.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrent(i)}
+            className="transition-all duration-300 rounded-none"
+            style={{
+              width: i === current ? '20px' : '6px',
+              height: '4px',
+              background: i === current ? 'rgb(0,240,230)' : 'rgba(255,255,255,0.3)',
+            }}
+            aria-label={`Go to photo ${i + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Prev / Next arrows (visible on hover) */}
+      <button
+        onClick={prev}
+        className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-dark-900/70 border border-dark-600 text-dark-200 hover:text-primary-500 hover:border-primary-500/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
+        aria-label="Previous photo"
+      >
+        <ChevronLeft size={16} />
+      </button>
+      <button
+        onClick={next}
+        className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-dark-900/70 border border-dark-600 text-dark-200 hover:text-primary-500 hover:border-primary-500/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
+        aria-label="Next photo"
+      >
+        <ChevronRight size={16} />
+      </button>
+    </div>
+  );
+}
 
 // ── Data ──────────────────────────────────────────────────────────────
 
@@ -196,8 +297,11 @@ export default function AboutPage() {
               </a>
             </div>
 
-            {/* Right: Info card */}
+            {/* Right: Photo slideshow + Info cards */}
             <div>
+              {/* Photo slideshow */}
+              <PhotoSlideshow />
+
               {/* Profile info */}
               <div className="card mb-6">
                 <h2 className="font-heading font-semibold text-dark-50 mb-6 text-sm tracking-widest uppercase">
