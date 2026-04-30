@@ -38,7 +38,15 @@ function PhotoSlideshow() {
     <div className="relative w-full overflow-hidden bg-dark-800 border border-dark-600 mb-6 group"
       style={{ aspectRatio: '4/3' }}
     >
-      {/* Slides */}
+      {/* Fallback — rendered first so images always appear on top */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-dark-600 pointer-events-none">
+        <div className="w-16 h-16 border-2 border-dashed border-dark-600 flex items-center justify-center mb-2">
+          <span className="text-2xl">📷</span>
+        </div>
+        <span className="text-xs font-mono text-dark-600">Tambahkan foto kamu</span>
+      </div>
+
+      {/* Slides — rendered after fallback so they sit on top */}
       {PHOTOS.map((photo, i) => (
         <img
           key={photo.src}
@@ -46,17 +54,8 @@ function PhotoSlideshow() {
           alt={photo.alt}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
           style={{ opacity: i === current ? 1 : 0 }}
-          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
         />
       ))}
-
-      {/* Fallback when no photos */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-dark-600 pointer-events-none">
-        <div className="w-16 h-16 border-2 border-dashed border-dark-600 flex items-center justify-center mb-2">
-          <span className="text-2xl">📷</span>
-        </div>
-        <span className="text-xs font-mono text-dark-600">Tambahkan foto kamu</span>
-      </div>
 
       {/* Bottom gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-dark-900/70 via-transparent to-transparent pointer-events-none" />
