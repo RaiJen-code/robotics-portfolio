@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Download, MessageCircle, ChevronDown, Cpu, Bot, Wrench } from 'lucide-react';
+import { imgSrc } from '../../lib/utils';
 
 const TYPED_ROLES = [
   'Robotics Engineer',
@@ -143,7 +144,7 @@ export default function Hero() {
             <MessageCircle size={16} />
             Chat Now
           </button>
-          <a href="/cv/RaiJen-CV.pdf" download className="btn-ghost">
+          <a href={imgSrc('/rangga_resume.pdf')} download="Rangga_Prasetya_CV.pdf" className="btn-ghost">
             <Download size={16} />
             Download CV
           </a>
