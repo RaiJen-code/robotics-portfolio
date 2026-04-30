@@ -7,6 +7,7 @@ import {
   Upload, Send, AlertCircle, CheckCircle, ChevronDown
 } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { imgSrc } from '../lib/utils';
 
 const WA_NUMBER = '6288971759690';
 
@@ -18,6 +19,7 @@ const SERVICES = [
     icon: Cpu,
     title: 'Konsultasi Teknik',
     subtitle: 'Technical Consulting',
+    image: '/images/services/konsultasi.jpg',
     description: 'Sesi konsultasi 1-on-1 untuk robotics, embedded systems, AI integration, sistem kontrol, atau arsitektur teknikal project kamu.',
     features: [
       'Analisis arsitektur sistem',
@@ -32,13 +34,16 @@ const SERVICES = [
       { label: 'Bulanan (8 sesi)', price: 'Rp 950.000', note: 'Hemat 21%' },
     ],
     badge: 'Paling Populer',
-    color: 'primary',
+    accentColor: 'border-primary-500/40',
+    iconBg: 'bg-primary-500/20 border-primary-500/30',
+    iconColor: 'text-primary-500',
   },
   {
     id: '3d-printing',
     icon: Printer,
     title: '3D Printing',
     subtitle: '3D Printing Service',
+    image: '/images/services/3d-printing.jpg',
     description: 'Cetak prototipe, spare part, enclosure elektronik, atau model 3D custom. FDM printing dengan berbagai material.',
     features: [
       'Material: PLA, PETG, TPU',
@@ -53,13 +58,16 @@ const SERVICES = [
       { label: 'Custom Project', price: 'Hubungi kami', note: 'Mulai Rp 50.000' },
     ],
     badge: 'Terima STL/STEP',
-    color: 'blue',
+    accentColor: 'border-blue-500/40',
+    iconBg: 'bg-blue-500/20 border-blue-500/30',
+    iconColor: 'text-blue-400',
   },
   {
     id: 'document-print',
     icon: FileText,
     title: 'Print Dokumen',
     subtitle: 'Document Printing',
+    image: '/images/services/print-dokumen.jpg',
     description: 'Cetak dokumen, laporan, skripsi, presentasi, atau materi dengan kualitas tinggi. Hitam-putih dan berwarna tersedia.',
     features: [
       'HVS 70/80gsm, Art Paper',
@@ -74,7 +82,9 @@ const SERVICES = [
       { label: 'Art Paper Color', price: 'Rp 2.500/lembar', note: 'A4, 150gsm' },
     ],
     badge: 'Terima PDF/DOCX',
-    color: 'green',
+    accentColor: 'border-green-500/40',
+    iconBg: 'bg-green-500/20 border-green-500/30',
+    iconColor: 'text-green-400',
   },
 ];
 
@@ -426,58 +436,90 @@ export default function ServicesPage() {
           {/* Services Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
             {SERVICES.map(service => (
-              <div key={service.id} className="card-glow relative group">
-                {/* Badge */}
-                {service.badge && (
-                  <div className="absolute top-4 right-4 px-2 py-1 bg-primary-500/10 border border-primary-500/30 text-primary-500 text-xs font-mono">
-                    {service.badge}
+              <div key={service.id} className={`relative group flex flex-col bg-dark-800 border ${service.accentColor} overflow-hidden transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,240,230,0.08)]`}>
+
+                {/* ── Image area ───────────────────────────────── */}
+                <div className="relative w-full h-48 overflow-hidden bg-dark-700">
+                  <img
+                    src={imgSrc(service.image)}
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={(e) => {
+                      // Hide broken image, show fallback
+                      (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                  {/* Fallback placeholder (shown if image missing) */}
+                  <div className="absolute inset-0 hidden items-center justify-center bg-dark-700">
+                    <service.icon size={40} className={service.iconColor + ' opacity-20'} />
                   </div>
-                )}
-
-                <service.icon size={24} className="text-primary-500 mb-4" />
-                <h3 className="font-heading text-xl font-bold text-dark-50 mb-1">
-                  {service.title}
-                </h3>
-                <p className="font-mono text-xs text-dark-400 mb-3 tracking-wider">
-                  {service.subtitle}
-                </p>
-                <p className="font-body text-dark-200 text-sm leading-relaxed mb-5">
-                  {service.description}
-                </p>
-
-                {/* Features */}
-                <ul className="space-y-2 mb-6">
-                  {service.features.map(f => (
-                    <li key={f} className="flex items-center gap-2 text-sm text-dark-200">
-                      <Check size={12} className="text-primary-500 flex-shrink-0" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Pricing */}
-                <div className="border-t border-dark-700 pt-4 space-y-2">
-                  {service.pricing.map(p => (
-                    <div key={p.label} className="flex justify-between items-center">
-                      <div>
-                        <span className="text-xs font-mono text-dark-300">{p.label}</span>
-                        <span className="text-xs text-dark-500 ml-2">{p.note}</span>
-                      </div>
-                      <span className="font-heading font-semibold text-sm text-primary-500">
-                        {p.price}
-                      </span>
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-dark-800/80 via-transparent to-transparent" />
+                  {/* Badge */}
+                  {service.badge && (
+                    <div className="absolute top-3 left-3 px-2 py-1 bg-dark-900/80 backdrop-blur-sm border border-dark-600 text-primary-500 text-xs font-mono">
+                      {service.badge}
                     </div>
-                  ))}
+                  )}
                 </div>
 
-                <a
-                  href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Halo Rangga! Saya tertarik dengan layanan ${service.title} kamu.`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-outline w-full text-center mt-4 block text-xs"
-                >
-                  Book via WhatsApp
-                </a>
+                {/* ── Content area ─────────────────────────────── */}
+                <div className="flex flex-col flex-1 p-6">
+                  {/* Icon + title */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={`w-9 h-9 border flex items-center justify-center flex-shrink-0 ${service.iconBg}`}>
+                      <service.icon size={16} className={service.iconColor} />
+                    </div>
+                    <div>
+                      <h3 className="font-heading text-base font-bold text-dark-50 leading-tight">
+                        {service.title}
+                      </h3>
+                      <p className="font-mono text-[10px] text-dark-500 tracking-wider">
+                        {service.subtitle}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="font-body text-dark-300 text-sm leading-relaxed mb-5">
+                    {service.description}
+                  </p>
+
+                  {/* Features */}
+                  <ul className="space-y-1.5 mb-5">
+                    {service.features.map(f => (
+                      <li key={f} className="flex items-center gap-2 text-xs text-dark-300">
+                        <Check size={11} className={`${service.iconColor} flex-shrink-0`} />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Pricing */}
+                  <div className="border-t border-dark-700 pt-4 space-y-2 mt-auto">
+                    {service.pricing.map(p => (
+                      <div key={p.label} className="flex justify-between items-baseline">
+                        <div>
+                          <span className="text-xs font-mono text-dark-400">{p.label}</span>
+                          <span className="text-[10px] text-dark-600 ml-1.5">{p.note}</span>
+                        </div>
+                        <span className={`font-heading font-semibold text-sm ${service.iconColor}`}>
+                          {p.price}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <a
+                    href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Halo Rangga! Saya tertarik dengan layanan ${service.title} kamu.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-5 w-full text-center text-xs font-mono py-2.5 px-4 border border-dark-600 text-dark-300 hover:border-primary-500 hover:text-primary-500 transition-all duration-200 block"
+                  >
+                    Book via WhatsApp →
+                  </a>
+                </div>
               </div>
             ))}
           </div>
