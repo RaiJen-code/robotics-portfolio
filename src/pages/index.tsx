@@ -245,9 +245,14 @@ function CTASection() {
               Mari diskusikan ide kamu!
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Link href="/services#booking" className="btn-primary">
+              <a
+                href="https://wa.me/6288971759690?text=Halo%20Rangga!%20Saya%20ingin%20mulai%20project%20bersama%20kamu."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
                 Mulai Project <ArrowRight size={16} />
-              </Link>
+              </a>
               <Link href="/about" className="btn-outline">
                 Kenali Saya
               </Link>

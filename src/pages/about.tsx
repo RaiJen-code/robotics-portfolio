@@ -245,9 +245,14 @@ export default function AboutPage() {
                 <p className="text-dark-300 text-sm">
                   Open to freelance projects, collaboration, full-time roles in robotics, AI, and embedded systems.
                 </p>
-                <Link href="/services#booking" className="btn-primary mt-4 text-xs">
+                <a
+                  href="https://wa.me/6288971759690?text=Halo%20Rangga!%20Saya%20ingin%20book%20konsultasi%20teknik%20dengan%20kamu."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary mt-4 text-xs"
+                >
                   Book a Consultation
-                </Link>
+                </a>
               </div>
             </div>
           </div>
@@ -367,9 +372,14 @@ export default function AboutPage() {
             Whether it's a robotics project, AI integration, or technical consultation — I'm open to new challenges.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link href="/services#booking" className="btn-primary">
+            <a
+              href="https://wa.me/6288971759690?text=Halo%20Rangga!%20Saya%20tertarik%20untuk%20hire%20kamu."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+            >
               Hire Me
-            </Link>
+            </a>
             <Link href="/portfolio" className="btn-outline">
               View Portfolio
             </Link>

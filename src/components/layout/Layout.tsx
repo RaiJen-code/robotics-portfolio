@@ -71,9 +71,14 @@ function Navbar() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <Link href="/services#booking" className="btn-primary text-xs py-2 px-4">
+          <a
+            href="https://wa.me/6288971759690?text=Halo%20Rangga!%20Saya%20tertarik%20untuk%20hire%20kamu."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary text-xs py-2 px-4"
+          >
             Hire Me
-          </Link>
+          </a>
         </div>
 
         {/* Mobile hamburger */}
@@ -105,9 +110,14 @@ function Navbar() {
               </li>
             ))}
             <li className="pt-2">
-              <Link href="/services#booking" className="btn-primary w-full text-center text-xs">
+              <a
+                href="https://wa.me/6288971759690?text=Halo%20Rangga!%20Saya%20tertarik%20untuk%20hire%20kamu."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary w-full text-center text-xs block"
+              >
                 Hire Me
-              </Link>
+              </a>
             </li>
           </ul>
         </div>
@@ -195,9 +205,14 @@ function Footer() {
           <p className="text-dark-400 text-xs font-mono">
             © {new Date().getFullYear()} RaiJen — Built with Next.js + GitHub Pages
           </p>
-          <p className="text-dark-500 text-xs font-mono">
-            Automation powered by <span className="text-primary-500">n8n</span>
-          </p>
+          <a
+            href="https://wa.me/6288971759690"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-dark-500 text-xs font-mono hover:text-green-500 transition-colors"
+          >
+            Chat via <span className="text-green-500">WhatsApp</span>
+          </a>
         </div>
       </div>
     </footer>

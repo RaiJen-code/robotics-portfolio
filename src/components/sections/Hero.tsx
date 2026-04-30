@@ -115,13 +115,23 @@ export default function Hero() {
           className="flex flex-wrap justify-center gap-4 mb-16 animate-fade-up"
           style={{ animationDelay: '0.4s', opacity: 0 }}
         >
-          <Link href="/services#booking" className="btn-primary">
+          <a
+            href="https://wa.me/6288971759690?text=Halo%20Rangga!%20Saya%20tertarik%20untuk%20hire%20kamu."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary"
+          >
             Hire Me
             <ArrowRight size={16} />
-          </Link>
-          <Link href="/services#consultation" className="btn-outline">
+          </a>
+          <a
+            href="https://wa.me/6288971759690?text=Halo%20Rangga!%20Saya%20ingin%20book%20konsultasi%20teknik%20dengan%20kamu."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline"
+          >
             Book Consultation
-          </Link>
+          </a>
           <button
             onClick={() => {
               // Trigger chat widget

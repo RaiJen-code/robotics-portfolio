@@ -7,7 +7,8 @@ import {
   Upload, Send, AlertCircle, CheckCircle, ChevronDown
 } from 'lucide-react';
 import Layout from '../components/layout/Layout';
-import { sendServiceRequest, validateEmail } from '../lib/n8n';
+
+const WA_NUMBER = '6288971759690';
 
 // ── Services Data ──────────────────────────────────────────────────────
 
@@ -126,53 +127,49 @@ function ServiceForm() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    
-    // Client validation
-    if (!form.name.trim() || !form.email.trim() || !form.description.trim()) {
-      setErrorMsg('Mohon isi semua field yang diperlukan.');
+
+    if (!form.name.trim() || !form.description.trim()) {
+      setErrorMsg('Mohon isi Nama dan Deskripsi Kebutuhan.');
       return;
     }
 
-    if (!validateEmail(form.email)) {
-      setErrorMsg('Format email tidak valid.');
-      return;
-    }
-
-    setStatus('loading');
     setErrorMsg('');
 
-    const result = await sendServiceRequest({
-      type: form.type,
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      subject: form.subject || `${form.type} request`,
-      description: form.description,
-      urgency: form.urgency,
-      budget: form.budget,
-      fileInfo: fileInfo || undefined,
-    });
+    const serviceLabel = SERVICES.find(s => s.id === form.type)?.title ?? form.type;
+    const urgencyLabel = form.urgency === 'asap' ? 'ASAP' : form.urgency === 'urgent' ? 'Urgent (<24 jam)' : 'Normal (1-3 hari)';
 
-    if (result.success) {
-      setStatus('success');
-      setForm(INITIAL_FORM);
-      setFileInfo(null);
-    } else {
-      setStatus('error');
-      setErrorMsg(result.error || 'Terjadi kesalahan. Coba lagi.');
-    }
+    const lines = [
+      `Halo Rangga! Saya ingin request service dari portfolio kamu.`,
+      ``,
+      `*Jenis Service:* ${serviceLabel}`,
+      `*Nama:* ${form.name}`,
+      form.email ? `*Email:* ${form.email}` : '',
+      form.phone ? `*WhatsApp:* ${form.phone}` : '',
+      form.subject ? `*Judul Project:* ${form.subject}` : '',
+      `*Urgency:* ${urgencyLabel}`,
+      form.budget ? `*Budget:* ${form.budget}` : '',
+      ``,
+      `*Detail Kebutuhan:*`,
+      form.description,
+      fileInfo ? `\n*File:* ${fileInfo.name} (akan saya kirim via WA)` : '',
+    ].filter(l => l !== '');
+
+    const waText = encodeURIComponent(lines.join('\n'));
+    window.open(`https://wa.me/${WA_NUMBER}?text=${waText}`, '_blank');
+    setStatus('success');
+    setForm(INITIAL_FORM);
+    setFileInfo(null);
   }
 
   if (status === 'success') {
     return (
       <div className="card text-center py-12">
-        <CheckCircle size={48} className="text-primary-500 mx-auto mb-4" />
-        <h3 className="font-heading text-2xl font-bold text-dark-50 mb-3">Request Terkirim!</h3>
+        <CheckCircle size={48} className="text-green-500 mx-auto mb-4" />
+        <h3 className="font-heading text-2xl font-bold text-dark-50 mb-3">WhatsApp Terbuka!</h3>
         <p className="text-dark-200 mb-6">
-          Terima kasih! Saya akan menghubungi kamu via email dalam 1x24 jam.
-          Untuk respon lebih cepat, hubungi via Telegram @RaiJenDev.
+          Pesan sudah disiapkan di WhatsApp. Tinggal tekan kirim dan Rangga akan segera merespons!
         </p>
         <button
           onClick={() => setStatus('idle')}
@@ -372,7 +369,7 @@ function ServiceForm() {
         </button>
 
         <p className="text-xs text-dark-500 text-center font-mono">
-          Request ini akan masuk ke sistem booking saya secara otomatis ⚡
+          Pesan akan langsung terbuka di WhatsApp kamu ⚡
         </p>
       </form>
     </div>
@@ -474,13 +471,12 @@ export default function ServicesPage() {
                 </div>
 
                 <a
-                  href="#booking"
+                  href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Halo Rangga! Saya tertarik dengan layanan ${service.title} kamu.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="btn-outline w-full text-center mt-4 block text-xs"
-                  onClick={(e) => {
-                    document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
                 >
-                  Book {service.title}
+                  Book via WhatsApp
                 </a>
               </div>
             ))}
@@ -514,8 +510,8 @@ export default function ServicesPage() {
                 Mulai Project Kamu Sekarang
               </h2>
               <p className="text-dark-200 text-sm leading-relaxed mb-6">
-                Isi form di sebelah kanan. Request kamu akan langsung masuk ke sistem saya 
-                dan saya akan konfirmasi dalam <strong className="text-primary-500">1×24 jam</strong>.
+                Isi form di sebelah kanan. Klik kirim dan pesan kamu akan langsung terbuka di
+                <strong className="text-green-500"> WhatsApp</strong> — saya akan konfirmasi dalam <strong className="text-primary-500">1×24 jam</strong>.
               </p>
               
               <div className="space-y-4">

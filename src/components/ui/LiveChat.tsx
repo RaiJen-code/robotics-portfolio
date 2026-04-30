@@ -1,7 +1,8 @@
 // src/components/ui/LiveChat.tsx
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Minimize2, Bot, User } from 'lucide-react';
-import { sendChatMessage, getOrCreateSessionId } from '../../lib/n8n';
+import { X, Send, Minimize2, Bot, User } from 'lucide-react';
+
+const WA_NUMBER = '6288971759690';
 
 interface Message {
   id: string;
@@ -12,11 +13,11 @@ interface Message {
 }
 
 const BOT_RESPONSES: Record<string, string> = {
-  default: 'Terima kasih atas pesanmu! Saya akan balas secepatnya. Untuk urusan mendesak, hubungi via Telegram @RaiJenDev.',
-  greeting: 'Hei! 👋 Saya RaiJen — Robotics & AI Engineer. Ada yang bisa saya bantu? Konsultasi, 3D printing, atau kolaborasi project?',
-  price: 'Untuk detail harga, bisa lihat di halaman Services, atau kirim detail project kamu supaya saya bisa kasih estimasi yang akurat.',
+  default: 'Terima kasih atas pesanmu! Pesan kamu akan diteruskan ke WhatsApp saya. Klik tombol kirim untuk melanjutkan.',
+  greeting: 'Hei! Saya RaiJen — Robotics & AI Engineer. Ada yang bisa saya bantu? Konsultasi, 3D printing, atau kolaborasi project?',
+  price: 'Untuk detail harga, bisa lihat di halaman Services, atau ceritakan detail project kamu via WhatsApp supaya saya bisa kasih estimasi yang akurat.',
   portfolio: 'Kamu bisa lihat semua project saya di halaman Portfolio. Ada robotics, AI, IoT, dan mechanical design.',
-  contact: 'Cara terbaik hubungi saya: email hello@raijen.dev, atau Telegram @RaiJenDev. Saya biasanya reply dalam 1-2 jam.',
+  contact: 'Cara terbaik hubungi saya langsung via WhatsApp. Klik tombol kirim dan pesan akan terbuka di WhatsApp!',
 };
 
 function getBotReply(message: string): string {
@@ -81,7 +82,7 @@ export default function LiveChat() {
     if (!isOpen || isMinimized) setHasNewMessage(true);
   }
 
-  async function handleSend() {
+  function handleSend() {
     const text = input.trim();
     if (!text || isSending) return;
 
@@ -94,27 +95,19 @@ export default function LiveChat() {
       role: 'user',
       text,
       timestamp: new Date(),
-      status: 'sending',
+      status: 'sent',
     };
     setMessages(prev => [...prev, userMsg]);
 
-    // Send to n8n
-    const result = await sendChatMessage(text);
-
-    // Update message status
-    setMessages(prev =>
-      prev.map(m => m.id === userMsg.id
-        ? { ...m, status: result.success ? 'sent' : 'error' }
-        : m
-      )
-    );
+    // Open WhatsApp with the message
+    const waText = encodeURIComponent(`Halo Rangga! Saya dari portfolio website kamu.\n\n${text}`);
+    window.open(`https://wa.me/${WA_NUMBER}?text=${waText}`, '_blank');
 
     // Bot auto-reply
     setTimeout(() => {
       addBotMessage(getBotReply(text));
+      setIsSending(false);
     }, 800);
-
-    setIsSending(false);
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -136,14 +129,14 @@ export default function LiveChat() {
       {!isOpen && (
         <button
           onClick={handleOpen}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-primary-500 text-dark-900 rounded-none flex items-center justify-center shadow-lg hover:bg-primary-400 transition-all duration-200 group"
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 text-white rounded-none flex items-center justify-center shadow-lg hover:bg-green-400 transition-all duration-200 group"
           style={{
             clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)',
-            boxShadow: '0 0 20px rgba(0, 240, 230, 0.4)',
+            boxShadow: '0 0 20px rgba(34, 197, 94, 0.4)',
           }}
-          aria-label="Open chat"
+          aria-label="Chat via WhatsApp"
         >
-          <MessageCircle size={22} />
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           {hasNewMessage && (
             <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
               !
@@ -166,14 +159,14 @@ export default function LiveChat() {
           {/* Header */}
           <div className="h-14 flex items-center justify-between px-4 bg-dark-700 border-b border-dark-600">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-primary-500/20 border border-primary-500/40 flex items-center justify-center">
-                <Bot size={14} className="text-primary-500" />
+              <div className="w-8 h-8 bg-green-500/20 border border-green-500/40 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="#22c55e"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               </div>
               <div>
                 <p className="font-heading text-sm font-semibold text-dark-50">RaiJen</p>
                 <p className="text-xs text-dark-400 font-mono flex items-center gap-1.5">
                   <span className="status-online scale-75" />
-                  Online · Replies biasanya &lt; 1 jam
+                  Chat via WhatsApp
                 </p>
               </div>
             </div>

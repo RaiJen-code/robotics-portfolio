@@ -594,19 +594,19 @@ footer{background:var(--ink-mid);border-top:1px solid var(--border);padding:32px
   <div class="chat-hd">
     <div>
       <div class="chat-hd-name">Rangga Prasetya</div>
-      <div class="chat-hd-st"><div class="sdot"></div>Usually replies within a few hours</div>
+      <div class="chat-hd-st"><div class="sdot"></div>Aktif di WhatsApp · Biasanya balas cepat</div>
     </div>
     <button class="chat-x" onclick="toggleChat()">&#215;</button>
   </div>
   <div class="chat-msgs" id="chatMsgs">
-    <div class="msg bot"><div class="mb">Hello — I am Rangga. Feel free to ask about my work, projects, or availability for collaboration.</div><div class="mt">Now</div></div>
+    <div class="msg bot"><div class="mb">Halo! Saya Rangga. Ketik pertanyaanmu di bawah — pesan akan langsung terbuka di WhatsApp dan saya balas secepatnya.</div><div class="mt">Now</div></div>
   </div>
   <div class="n8n-bar">
-    <div class="n8n-dot" id="n8nDot"></div>
-    <span id="n8nLabel">Webhook not configured</span>
+    <svg style="width:14px;height:14px;fill:#4ade80;flex-shrink:0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span>Pesan dikirim langsung ke WhatsApp</span>
   </div>
   <div class="chat-inp-row">
-    <input class="chat-inp" id="chatInput" type="text" placeholder="Type a message..." maxlength="400" onkeydown="if(event.key==='Enter')sendMsg()">
+    <input class="chat-inp" id="chatInput" type="text" placeholder="Tulis pesanmu..." maxlength="400" onkeydown="if(event.key==='Enter')sendMsg()">
     <button class="chat-send" onclick="sendMsg()">
       <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
     </button>
@@ -614,13 +614,8 @@ footer{background:var(--ink-mid);border-top:1px solid var(--border);padding:32px
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-//  KONFIGURASI N8N WEBHOOK
-//  Setelah membuat workflow di n8n, paste URL webhook di sini
-// ═══════════════════════════════════════════════════════════
-const N8N_WEBHOOK_URL = '';
-// Contoh: 'https://your-n8n.app.n8n.cloud/webhook/portfolio-chat'
-// ═══════════════════════════════════════════════════════════
+// Nomor WhatsApp (sudah benar, tidak perlu diubah)
+const WA = '6288971759690';
 
 // Nav scroll
 window.addEventListener('scroll', () => {
@@ -633,40 +628,13 @@ const obs = new IntersectionObserver((entries) => {
 }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-// n8n status indicator
-function setN8nStatus(ok) {
-  document.getElementById('n8nDot').classList.toggle('on', ok);
-  document.getElementById('n8nLabel').textContent = ok
-    ? 'Live — messages forwarded to Rangga'
-    : (N8N_WEBHOOK_URL ? 'Webhook error — check configuration' : 'Webhook not configured');
-}
-setN8nStatus(false);
-
-// Chat
+// Chat toggle
 function toggleChat() {
   document.getElementById('chatPanel').classList.toggle('open');
 }
 
-const REPLIES = {
-  hello:   'Hello! Happy to connect. Ask me anything about my projects, skills, or availability.',
-  project: 'I have worked on robotics, IoT, AI, and big data projects. Scroll through the Projects section for details.',
-  hire:    'I am open to freelance, contract, and full-time roles. Email razetya100@gmail.com with your project details.',
-  robot:   'Robotics is my core domain — ROS2, computer vision, embedded control. Happy to discuss your requirements.',
-  contact: 'Best ways to reach me: razetya100@gmail.com or WhatsApp +62 889 7175 9690.',
-  price:   'Pricing depends on scope. Email razetya100@gmail.com with details for a proper estimate.',
-  default: 'Thank you for your message. I will reply via email or WhatsApp as soon as possible.',
-};
-function getReply(m) {
-  m = m.toLowerCase();
-  if (/hello|hi|halo|hey|salam/.test(m))                return REPLIES.hello;
-  if (/project|portfolio|build|karya/.test(m))          return REPLIES.project;
-  if (/hire|job|kerja|freelance|collab|magang/.test(m)) return REPLIES.hire;
-  if (/robot|arm|servo|ros|iot/.test(m))                return REPLIES.robot;
-  if (/contact|email|phone|wa|hubungi/.test(m))         return REPLIES.contact;
-  if (/price|cost|rate|harga|biaya|fee/.test(m))        return REPLIES.price;
-  return REPLIES.default;
-}
 function ts() { return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
+
 function appendMsg(text, role) {
   const wrap = document.getElementById('chatMsgs');
   const d = document.createElement('div');
@@ -676,25 +644,41 @@ function appendMsg(text, role) {
   wrap.scrollTop = wrap.scrollHeight;
 }
 
-async function sendMsg() {
+// Auto-reply untuk pertanyaan umum (langsung di browser)
+const REPLIES = {
+  hire:    'Untuk info hire/kolaborasi, WhatsApp kamu akan langsung terbuka — saya balas secepatnya!',
+  price:   'Harga tergantung scope project. Detail lebih lanjut bisa kita diskusikan via WhatsApp.',
+  robot:   'Robotics & embedded systems adalah spesialisasi saya. Yuk diskusi via WhatsApp!',
+  project: 'Bisa scroll ke bagian Projects di atas untuk lihat portofolio saya.',
+  contact: 'Cara tercepat: WhatsApp +62 889 7175 9690 atau email razetya100@gmail.com.',
+  default: 'Pesan kamu akan langsung dikirim ke WhatsApp saya. Saya balas secepatnya!',
+};
+
+function getReply(m) {
+  m = m.toLowerCase();
+  if (/hire|job|kerja|freelance|collab|magang/.test(m)) return REPLIES.hire;
+  if (/price|cost|rate|harga|biaya|fee/.test(m))        return REPLIES.price;
+  if (/robot|arm|servo|ros|iot|ai|embedded/.test(m))    return REPLIES.robot;
+  if (/project|portfolio|karya|work/.test(m))           return REPLIES.project;
+  if (/contact|email|phone|wa|hubungi/.test(m))         return REPLIES.contact;
+  return REPLIES.default;
+}
+
+function sendMsg() {
   const inp = document.getElementById('chatInput');
   const text = inp.value.trim();
   if (!text) return;
+
+  // Tampilkan pesan user di chat
   appendMsg(text, 'usr');
   inp.value = '';
 
-  if (N8N_WEBHOOK_URL) {
-    try {
-      const r = await fetch(N8N_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Source': 'portfolio-website' },
-        body: JSON.stringify({ message: text, timestamp: new Date().toISOString(), page: location.href })
-      });
-      setN8nStatus(r.ok);
-    } catch(e) { setN8nStatus(false); }
-  }
+  // Buka WhatsApp dengan pesan yang sudah diketik
+  const waText = encodeURIComponent(`Halo Rangga! Saya dari portfolio website kamu.\n\n${text}`);
+  window.open(`https://wa.me/${WA}?text=${waText}`, '_blank');
 
-  setTimeout(() => appendMsg(getReply(text), 'bot'), 900);
+  // Tampilkan auto-reply setelah 800ms
+  setTimeout(() => appendMsg(getReply(text), 'bot'), 800);
 }
 </script>
 </body>
