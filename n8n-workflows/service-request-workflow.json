@@ -1,0 +1,154 @@
+{
+  "name": "🛠️ Service Request — Portfolio Website",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "portfolio-service",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-service",
+      "name": "Webhook: Service Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.name }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "isNotEmpty" }
+            },
+            {
+              "leftValue": "={{ $json.body.email }}",
+              "rightValue": "@",
+              "operator": { "type": "string", "operation": "contains" }
+            },
+            {
+              "leftValue": "={{ $json.body.description }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "isNotEmpty" }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "validate-service",
+      "name": "Validate Service Request",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "value": "={{ $vars.GOOGLE_SHEET_ID }}", "mode": "id" },
+        "sheetName": "Service Requests",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "=SRQ-{{ $now.format('YYMMDDHHmm') }}",
+            "Timestamp": "={{ $now.format('DD/MM/YYYY HH:mm:ss') }}",
+            "Tipe Service": "={{ $json.body.type }}",
+            "Nama": "={{ $json.body.name }}",
+            "Email": "={{ $json.body.email }}",
+            "Phone/WA": "={{ $json.body.phone || '-' }}",
+            "Subjek": "={{ $json.body.subject || '-' }}",
+            "Deskripsi": "={{ $json.body.description }}",
+            "Urgency": "={{ $json.body.urgency }}",
+            "Budget": "={{ $json.body.budget || '-' }}",
+            "File Info": "={{ $json.body.fileInfo ? $json.body.fileInfo.name + ' (' + ($json.body.fileInfo.size / 1024).toFixed(0) + 'KB)' : '-' }}",
+            "Status": "Pending",
+            "Notes": ""
+          }
+        }
+      },
+      "id": "save-service-sheets",
+      "name": "Simpan ke Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [680, 200],
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "google-sheets-creds", "name": "Google Sheets" }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $vars.TELEGRAM_CHAT_ID }}",
+        "text": "=🛠️ *Service Request Baru!*\n\n📋 *Tipe:* {{ $json.body.type.toUpperCase() }}\n👤 *Nama:* {{ $json.body.name }}\n📧 *Email:* {{ $json.body.email }}\n📱 *WA:* {{ $json.body.phone || '-' }}\n⚡ *Urgency:* {{ $json.body.urgency }}\n💰 *Budget:* {{ $json.body.budget || 'Tidak disebutkan' }}\n\n📝 *Deskripsi:*\n{{ $json.body.description }}\n\n{{ $json.body.fileInfo ? '📎 File: ' + $json.body.fileInfo.name : '' }}\n\n🕐 {{ $now.format('DD/MM/YYYY HH:mm') }}\n\n---\n✅ Cek Google Sheets untuk detail lengkap",
+        "additionalFields": { "parse_mode": "Markdown" }
+      },
+      "id": "notify-telegram-service",
+      "name": "Notifikasi Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [680, 360],
+      "credentials": {
+        "telegramApi": { "id": "telegram-bot-creds", "name": "Telegram Bot" }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@raijen.dev",
+        "toEmail": "={{ $json.body.email }}",
+        "subject": "=✅ Request {{ $json.body.type }} Diterima — RaiJen",
+        "emailType": "html",
+        "message": "=<html><body style='font-family:sans-serif;background:#0d1117;color:#c9d1d9;padding:40px;'><div style='max-width:600px;margin:0 auto;border:1px solid #21262d;padding:40px;'><h1 style='color:#00f0e6;font-size:24px;margin-bottom:20px;'>Request Diterima! ✅</h1><p>Hei <strong>{{ $json.body.name }}</strong>,</p><p>Terima kasih telah mengajukan request <strong>{{ $json.body.type }}</strong>. Saya telah menerima detail request kamu dan akan menghubungi kamu dalam <strong style='color:#00f0e6;'>1×24 jam</strong>.</p><div style='background:#161b22;border:1px solid #21262d;padding:20px;margin:20px 0;'><h3 style='color:#e6edf3;margin-top:0;'>Detail Request:</h3><p><strong>Tipe:</strong> {{ $json.body.type }}</p><p><strong>Urgency:</strong> {{ $json.body.urgency }}</p><p><strong>Deskripsi:</strong> {{ $json.body.description }}</p></div><p>Untuk follow-up lebih cepat, kamu bisa hubungi saya langsung via:</p><ul><li>Telegram: <a href='https://t.me/RaiJenDev' style='color:#00f0e6;'>@RaiJenDev</a></li><li>Email: <a href='mailto:hello@raijen.dev' style='color:#00f0e6;'>hello@raijen.dev</a></li></ul><p style='color:#6e7681;font-size:12px;margin-top:30px;'>Email ini dikirim otomatis oleh sistem. ⚡ Powered by n8n</p></div></body></html>"
+      },
+      "id": "send-confirmation-email",
+      "name": "Email Konfirmasi ke Klien",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [680, 520],
+      "credentials": {
+        "smtp": { "id": "smtp-creds", "name": "SMTP Gmail" }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": true, \"message\": \"Request berhasil dikirim! Cek email kamu untuk konfirmasi.\"}",
+        "options": { "responseCode": 200 }
+      },
+      "id": "respond-service-success",
+      "name": "Response: Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [900, 360]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": false, \"error\": \"Data tidak lengkap\"}",
+        "options": { "responseCode": 400 }
+      },
+      "id": "respond-service-error",
+      "name": "Response: Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [680, 660]
+    }
+  ],
+  "connections": {
+    "Webhook: Service Request": {
+      "main": [[{ "node": "Validate Service Request", "type": "main", "index": 0 }]]
+    },
+    "Validate Service Request": {
+      "main": [
+        [
+          { "node": "Simpan ke Google Sheets", "type": "main", "index": 0 },
+          { "node": "Notifikasi Telegram", "type": "main", "index": 0 },
+          { "node": "Email Konfirmasi ke Klien", "type": "main", "index": 0 }
+        ],
+        [{ "node": "Response: Error", "type": "main", "index": 0 }]
+      ]
+    },
+    "Notifikasi Telegram": {
+      "main": [[{ "node": "Response: Success", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}

@@ -1,0 +1,116 @@
+# .github/workflows/deploy.yml
+# ─────────────────────────────────────────────────────────────
+# GitHub Actions: Deploy ke GitHub Pages
+#
+# CARA KERJA:
+#   1. Setiap push ke branch 'main' → workflow ini berjalan
+#   2. Install Node.js & npm packages
+#   3. Build Next.js → folder 'out/'
+#   4. Upload 'out/' ke GitHub Pages
+#
+# SEBELUM DEPLOY - wajib lakukan:
+#   1. Di repo GitHub → Settings → Pages → Source: GitHub Actions
+#   2. Di repo GitHub → Settings → Secrets → tambah:
+#      - N8N_CHAT_WEBHOOK    (URL webhook n8n untuk chat)
+#      - N8N_SERVICE_WEBHOOK (URL webhook n8n untuk service request)
+#      - N8N_CONTACT_WEBHOOK (URL webhook n8n untuk contact form)
+#      - SITE_URL            (misal: https://RaiJen-code.github.io)
+#   3. Ubah REPO_NAME di bawah sesuai nama repository kamu
+# ─────────────────────────────────────────────────────────────
+
+name: Deploy Portfolio to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:   # Bisa di-trigger manual dari GitHub UI
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # ── Step 1: Checkout kode ────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Step 2: Setup Node.js ────────────────────────────────
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── Step 3: Install dependencies ─────────────────────────
+      - name: Install npm dependencies
+        run: npm ci
+
+      # ── Step 4: Build Next.js static export ──────────────────
+      - name: Build Next.js site
+        run: npm run build
+        env:
+          # ── PENTING: Ganti '/robotics-portfolio' dengan nama repo kamu ──
+          # Contoh: repo https://github.com/RaiJen-code/my-portfolio
+          # maka REPO_NAME = /my-portfolio
+          # Jika pakai custom domain (misal raijen.dev), KOSONGKAN: REPO_NAME=
+          REPO_NAME: /robotics-portfolio
+
+          # ── n8n Webhooks — diambil dari GitHub Secrets ──
+          N8N_CHAT_WEBHOOK: ${{ secrets.N8N_CHAT_WEBHOOK }}
+          N8N_SERVICE_WEBHOOK: ${{ secrets.N8N_SERVICE_WEBHOOK }}
+          N8N_CONTACT_WEBHOOK: ${{ secrets.N8N_CONTACT_WEBHOOK }}
+          FORMSPREE_ID: ${{ secrets.FORMSPREE_ID }}
+          SITE_URL: ${{ secrets.SITE_URL }}
+
+          # Disable Next.js telemetry
+          NEXT_TELEMETRY_DISABLED: 1
+
+      # ── Step 5: Tambah .nojekyll ─────────────────────────────
+      # Tanpa ini, GitHub Pages akan skip folder _next/ karena prefix underscore
+      - name: Add .nojekyll to output
+        run: touch out/.nojekyll
+
+      # ── Step 6: Copy file HTML standalone sebagai alternatif ─
+      # rangga-portfolio.html juga bisa diakses di /rangga-portfolio.html
+      - name: Copy standalone HTML to output
+        run: |
+          cp rangga-portfolio.html out/rangga-portfolio.html
+          # Salin folder images jika ada
+          if [ -d "images" ]; then
+            cp -r images out/images
+          fi
+          # Salin CV PDF jika ada
+          if [ -f "rangga_resume.pdf" ]; then
+            cp rangga_resume.pdf out/rangga_resume.pdf
+          fi
+
+      # ── Step 7: Setup GitHub Pages ───────────────────────────
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # ── Step 8: Upload artifact ke Pages ─────────────────────
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './out'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    # Hanya deploy dari branch main (bukan dari PR)
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

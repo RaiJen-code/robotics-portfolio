@@ -1,0 +1,147 @@
+{
+  "name": "📱 Live Chat — Portfolio Website",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "portfolio-chat",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "https://raijen.github.io,https://raijen.dev"
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "portfolio-chat-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "check-message",
+              "leftValue": "={{ $json.body.message }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "isNotEmpty" }
+            },
+            {
+              "id": "check-source",
+              "leftValue": "={{ $request.headers['x-source'] }}",
+              "rightValue": "portfolio-website",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "validate-input",
+      "name": "Validate Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "{{ $vars.TELEGRAM_CHAT_ID }}",
+        "text": "=💬 *Pesan Chat Baru dari Website*\n\n👤 Session: `{{ $json.body.sessionId }}`\n📍 Halaman: {{ $json.body.page || 'Unknown' }}\n🕐 Waktu: {{ $now.format('DD/MM/YYYY HH:mm') }}\n\n💬 Pesan:\n{{ $json.body.message }}\n\n---\n⏩ Reply di sini untuk merespons",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "send-telegram",
+      "name": "Kirim ke Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [680, 200],
+      "credentials": {
+        "telegramApi": { "id": "telegram-bot-creds", "name": "Telegram Bot" }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "{{ $vars.GOOGLE_SHEET_ID }}",
+          "mode": "id"
+        },
+        "sheetName": "Chat Logs",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now.format('DD/MM/YYYY HH:mm:ss') }}",
+            "Session ID": "={{ $json.body.sessionId }}",
+            "Pesan": "={{ $json.body.message }}",
+            "Halaman": "={{ $json.body.page || '' }}",
+            "Status": "Belum Dibalas"
+          }
+        }
+      },
+      "id": "save-to-sheets",
+      "name": "Simpan ke Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [680, 380],
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "google-sheets-creds", "name": "Google Sheets" }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": true, \"message\": \"Pesan diterima! Akan segera dibalas.\"}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-success",
+      "name": "Response: Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [900, 280]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": false, \"error\": \"Request tidak valid\"}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "respond-error",
+      "name": "Response: Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [680, 500]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [[{ "node": "Validate Input", "type": "main", "index": 0 }]]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          { "node": "Kirim ke Telegram", "type": "main", "index": 0 },
+          { "node": "Simpan ke Google Sheets", "type": "main", "index": 0 }
+        ],
+        [{ "node": "Response: Error", "type": "main", "index": 0 }]
+      ]
+    },
+    "Kirim ke Telegram": {
+      "main": [[{ "node": "Response: Success", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "versionId": "1.0.0",
+  "triggerCount": 0,
+  "tags": ["portfolio", "chat", "automation"]
+}
