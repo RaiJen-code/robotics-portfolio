@@ -30,7 +30,7 @@ export default function BlogPost({ post }: Props) {
   return (
     <Layout>
       <Head>
-        <title>{post.title} — RaiJen Blog</title>
+        <title>{post.title} — aRJey Blog</title>
         <meta name="description" content={post.excerpt} />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt} />
@@ -42,7 +42,7 @@ export default function BlogPost({ post }: Props) {
           headline: post.title,
           description: post.excerpt,
           datePublished: post.date,
-          author: { '@type': 'Person', name: 'RaiJen' },
+          author: { '@type': 'Person', name: 'Rangga Prasetya' },
           image: post.coverImage,
         })}} />
       </Head>
@@ -119,7 +119,7 @@ export default function BlogPost({ post }: Props) {
                 <span className="font-display text-primary-500 font-bold">RJ</span>
               </div>
               <div>
-                <p className="font-heading font-semibold text-dark-50">RaiJen</p>
+                <p className="font-heading font-semibold text-dark-50">aRJey</p>
                 <p className="text-dark-400 text-sm">Robotics Engineer & AI Developer</p>
               </div>
               <Link href="/about" className="ml-auto btn-outline text-xs">

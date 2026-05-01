@@ -384,8 +384,8 @@ export default function ServicesPage() {
   return (
     <Layout>
       <Head>
-        <title>Services — RaiJen | Konsultasi, 3D Printing, Print Dokumen</title>
-        <meta name="description" content="Layanan konsultasi teknik, 3D printing, dan print dokumen profesional oleh RaiJen, Robotics & AI Engineer." />
+        <title>Services — aRJey | Konsultasi, 3D Printing, Print Dokumen</title>
+        <meta name="description" content="Layanan konsultasi teknik, 3D printing, dan print dokumen profesional oleh aRJey — Rangga Prasetya, Robotics & AI Engineer." />
       </Head>
 
       <div className="section">

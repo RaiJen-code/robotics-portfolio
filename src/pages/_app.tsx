@@ -11,11 +11,12 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#030712" />
-        <link rel="icon" href="/favicon.ico" />
-        
+        <link rel="icon" type="image/png" href="/favicon.png" sizes="64x64" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
+
         {/* Open Graph defaults */}
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="RaiJen Dev" />
+        <meta property="og:site_name" content="aRJey" />
         
         {/* Preconnect fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

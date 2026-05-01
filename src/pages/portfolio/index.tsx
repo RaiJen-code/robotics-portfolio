@@ -30,8 +30,8 @@ export default function PortfolioPage({ projects }: Props) {
   return (
     <Layout>
       <Head>
-        <title>Portfolio — RaiJen | Robotics, AI, IoT Projects</title>
-        <meta name="description" content="Portfolio project RaiJen: robotics, AI, IoT, dan mechanical design." />
+        <title>Portfolio — aRJey | Robotics, AI, IoT Projects</title>
+        <meta name="description" content="Portfolio project aRJey — Rangga Prasetya: robotics, AI, IoT, dan mechanical design." />
       </Head>
 
       <div className="section">

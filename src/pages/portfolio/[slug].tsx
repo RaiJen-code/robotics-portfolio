@@ -24,7 +24,7 @@ export default function ProjectCaseStudy({ project }: Props) {
   return (
     <Layout>
       <Head>
-        <title>{project.title} — Case Study | RaiJen</title>
+        <title>{project.title} — Case Study | aRJey</title>
         <meta name="description" content={project.excerpt} />
         <meta property="og:title" content={project.title} />
         <meta property="og:description" content={project.excerpt} />
@@ -38,7 +38,7 @@ export default function ProjectCaseStudy({ project }: Props) {
               headline: project.title,
               description: project.excerpt,
               datePublished: project.date,
-              author: { '@type': 'Person', name: 'RaiJen' },
+              author: { '@type': 'Person', name: 'Rangga Prasetya' },
             }),
           }}
         />

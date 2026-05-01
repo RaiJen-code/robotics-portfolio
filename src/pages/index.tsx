@@ -343,7 +343,7 @@ const TESTIMONIALS = [
   {
     name: 'Andika Pratama',
     role: 'Founder, TechStartup ID',
-    text: 'RaiJen berhasil membangun sistem robotik untuk line-following kami dalam waktu 2 minggu. Kode bersih, dokumentasi lengkap, dan komunikasi responsif.',
+    text: 'aRJey berhasil membangun sistem robotik untuk line-following kami dalam waktu 2 minggu. Kode bersih, dokumentasi lengkap, dan komunikasi responsif.',
     rating: 5,
   },
   {
@@ -458,10 +458,10 @@ export default function Home({ featuredProjects }: Props) {
   return (
     <Layout>
       <Head>
-        <title>RaiJen — Robotics Engineer & AI Developer</title>
-        <meta name="description" content="Personal branding website RaiJen, Robotics Engineer & AI Developer. Layanan konsultasi, 3D printing, dan embedded system development." />
-        <meta property="og:title" content="RaiJen — Robotics Engineer & AI Developer" />
-        <meta property="og:description" content="Personal branding website RaiJen, Robotics Engineer & AI Developer." />
+        <title>aRJey — Robotics Engineer & AI Developer</title>
+        <meta name="description" content="Portfolio aRJey — Rangga Prasetya, Robotics Engineer & AI Developer. Konsultasi teknik, 3D printing, dan embedded system development." />
+        <meta property="og:title" content="aRJey — Robotics Engineer & AI Developer" />
+        <meta property="og:description" content="Portfolio aRJey — Rangga Prasetya, Robotics Engineer & AI Developer." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

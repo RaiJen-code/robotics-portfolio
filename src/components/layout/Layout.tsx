@@ -2,8 +2,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, X, Github, Linkedin, Mail, Zap, Sun, Moon } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { imgSrc } from '../../lib/utils';
 
 // ── Navbar ─────────────────────────────────────────────────────────────
 
@@ -44,11 +45,15 @@ function Navbar() {
       <nav className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 border border-primary-500 flex items-center justify-center group-hover:bg-primary-500/10 transition-colors">
-            <Zap size={16} className="text-primary-500" />
+          <div className="w-8 h-8 flex items-center justify-center overflow-hidden">
+            <img
+              src={imgSrc('/images/logo.png')}
+              alt="aRJey"
+              className="w-full h-full object-contain"
+            />
           </div>
           <span className="font-display text-sm text-dark-50 hidden sm:block">
-            RaiJen<span className="text-primary-500">.dev</span>
+            aRJey<span className="text-primary-500">.dev</span>
           </span>
         </Link>
 
@@ -165,11 +170,15 @@ function Footer() {
 
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <div className="w-7 h-7 border border-primary-500/60 flex items-center justify-center group-hover:border-primary-500 transition-colors">
-              <Zap size={13} className="text-primary-500" />
+            <div className="w-7 h-7 flex items-center justify-center overflow-hidden">
+              <img
+                src={imgSrc('/images/logo.png')}
+                alt="aRJey"
+                className="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity"
+              />
             </div>
             <span className="font-display text-sm text-dark-100">
-              RaiJen<span className="text-primary-500">.dev</span>
+              aRJey<span className="text-primary-500">.dev</span>
             </span>
           </Link>
 
@@ -209,7 +218,7 @@ function Footer() {
         {/* ── Bottom bar ── */}
         <div className="border-t border-dark-700/40 py-3 flex flex-col sm:flex-row justify-between items-center gap-2">
           <p className="font-mono text-[10px] text-dark-500">
-            © {new Date().getFullYear()} Rangga Prasetya · Next.js + GitHub Pages
+            © {new Date().getFullYear()} aRJey · Rangga Prasetya · Next.js + GitHub Pages
           </p>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">

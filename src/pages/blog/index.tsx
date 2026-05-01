@@ -51,8 +51,8 @@ export default function BlogIndex({ posts, tags, categories }: Props) {
   return (
     <Layout>
       <Head>
-        <title>Blog — RaiJen | Robotics, AI, Embedded Systems</title>
-        <meta name="description" content="Artikel teknikal tentang robotics, embedded systems, AI, dan engineering dari RaiJen." />
+        <title>Blog — aRJey | Robotics, AI, Embedded Systems</title>
+        <meta name="description" content="Artikel teknikal tentang robotics, embedded systems, AI, dan engineering dari aRJey — Rangga Prasetya." />
       </Head>
 
       <div className="section">
