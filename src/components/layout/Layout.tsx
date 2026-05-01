@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, X, Github, Linkedin, Twitter, Mail, Zap, Sun, Moon } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail, Zap, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 // ── Navbar ─────────────────────────────────────────────────────────────
@@ -172,10 +172,9 @@ function Footer() {
             </p>
             <div className="flex gap-3 mt-4">
               {[
-                { href: 'https://github.com/RaiJenCode', icon: Github },
+                { href: 'https://github.com/RaiJen-code', icon: Github },
                 { href: 'https://linkedin.com', icon: Linkedin },
-                { href: 'https://twitter.com', icon: Twitter },
-                { href: 'mailto:hello@example.com', icon: Mail },
+                { href: 'mailto:razetya100@gmail.com', icon: Mail },
               ].map(({ href, icon: Icon }) => (
                 <a
                   key={href}

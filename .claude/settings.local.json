@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(npm install *)",
-      "Bash(REPO_NAME=/robotics-portfolio NEXT_PUBLIC_BASE_PATH=/robotics-portfolio npm run build)"
+      "Bash(REPO_NAME=/robotics-portfolio NEXT_PUBLIC_BASE_PATH=/robotics-portfolio npm run build)",
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }

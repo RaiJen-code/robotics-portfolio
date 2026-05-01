@@ -17,10 +17,6 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="RaiJen Dev" />
         
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@RaiJenDev" />
-
         {/* Preconnect fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />

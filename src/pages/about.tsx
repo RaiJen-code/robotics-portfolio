@@ -289,7 +289,7 @@ export default function AboutPage() {
               {/* Stats */}
               <div className="grid grid-cols-2 gap-px bg-dark-700 mb-5">
                 {STATS.map(stat => (
-                  <div key={stat.label} className="bg-dark-800/50 backdrop-blur-sm p-4" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}>
+                  <div key={stat.label} className="backdrop-blur-sm p-4" style={{ background: 'var(--item-bg)', boxShadow: 'var(--item-shadow)' }}>
                     <div className="font-heading text-3xl font-bold text-gradient mb-0.5">{stat.value}</div>
                     <div className="font-mono text-xs text-dark-400 tracking-wider uppercase">{stat.label}</div>
                   </div>
@@ -312,40 +312,77 @@ export default function AboutPage() {
               {/* Photo slideshow */}
               <PhotoSlideshow />
 
-              {/* Profile info */}
-              <div className="card mb-4">
-                <h2 className="font-heading font-semibold text-dark-50 mb-3 text-sm tracking-widest uppercase">
-                  Personal Info
-                </h2>
-                <div className="space-y-2">
+              {/* Profile info — redesigned */}
+              <div
+                className="mb-4 overflow-hidden border border-dark-600/60 backdrop-blur-md"
+                style={{ background: 'var(--card-bg)', boxShadow: 'var(--item-shadow)' }}
+              >
+                {/* Header */}
+                <div
+                  className="px-5 pt-4 pb-3.5 border-b border-dark-600/40"
+                  style={{ background: 'var(--item-bg)' }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
+                    <span className="font-mono text-[9px] text-primary-500 tracking-[0.3em] uppercase">Personal Info</span>
+                  </div>
+                  <h2 className="font-heading font-bold text-dark-50 text-base leading-tight">
+                    Rangga Prasetya Adiwijaya
+                  </h2>
+                  <div className="flex items-center gap-1.5 mt-1.5">
+                    <GraduationCap size={10} className="text-dark-400 shrink-0" />
+                    <span className="font-mono text-[10px] text-dark-400 leading-tight">
+                      B.Eng Electrical Engineering · IT-PLN 2021–2025
+                    </span>
+                  </div>
+                </div>
+
+                {/* Info rows */}
+                <div className="divide-y divide-dark-600/30">
                   {[
-                    { icon: null, label: 'Full Name', value: 'Rangga Prasetya Adiwijaya' },
-                    { icon: MapPin, label: 'Location', value: 'Jakarta, Indonesia' },
-                    { icon: Mail, label: 'Email', value: 'razetya100@gmail.com', href: 'mailto:razetya100@gmail.com' },
-                    { icon: Phone, label: 'WhatsApp', value: '+62 889 7175 9690', href: 'https://wa.me/6288971759690' },
-                    { icon: Instagram, label: 'Instagram', value: '@rangga.vibes', href: 'https://instagram.com/rangga.vibes' },
-                    { icon: Github, label: 'GitHub', value: 'github.com/RaiJen-code', href: 'https://github.com/RaiJen-code' },
-                    { icon: GraduationCap, label: 'Degree', value: 'B.Eng Electrical Engineering, IT-PLN (2021–2025)' },
-                  ].map(({ label, value, href }) => (
-                    <div key={label} className="flex gap-3 border-b border-dark-700/60 pb-2 last:border-0 last:pb-0">
-                      <span className="font-mono text-[10px] text-dark-500 tracking-widest uppercase w-20 pt-0.5 shrink-0">
-                        {label}
-                      </span>
-                      {href ? (
-                        <a
-                          href={href}
-                          target={href.startsWith('http') ? '_blank' : undefined}
-                          rel="noopener noreferrer"
-                          className="text-sm text-primary-500 hover:text-primary-400 transition-colors flex items-center gap-1"
+                    { icon: MapPin,    label: 'Location',  value: 'Jakarta, Indonesia',     iconBg: 'rgba(74,222,128,0.1)',  iconColor: '#4ade80',                             href: undefined },
+                    { icon: Mail,      label: 'Email',     value: 'razetya100@gmail.com',   iconBg: 'rgb(var(--primary-500) / 0.12)', iconColor: 'rgb(var(--primary-500))',    href: 'mailto:razetya100@gmail.com' },
+                    { icon: Phone,     label: 'WhatsApp',  value: '+62 889 7175 9690',      iconBg: 'rgba(74,222,128,0.1)',  iconColor: '#4ade80',                             href: 'https://wa.me/6288971759690' },
+                    { icon: Instagram, label: 'Instagram', value: '@rangga.vibes',          iconBg: 'rgba(244,114,182,0.1)', iconColor: '#f472b6',                             href: 'https://instagram.com/rangga.vibes' },
+                    { icon: Github,    label: 'GitHub',    value: 'github.com/RaiJen-code', iconBg: 'rgb(var(--dark-100) / 0.08)', iconColor: 'rgb(var(--dark-100))',          href: 'https://github.com/RaiJen-code' },
+                  ].map(({ icon: Icon, label, value, iconBg, iconColor, href }) => {
+                    const rowContent = (
+                      <>
+                        <div
+                          className="w-8 h-8 flex items-center justify-center border border-dark-600/50 shrink-0 group-hover:border-primary-500/40 transition-all"
+                          style={{ background: iconBg }}
                         >
-                          {value}
-                          <ExternalLink size={10} />
-                        </a>
-                      ) : (
-                        <span className="text-sm text-dark-100">{value}</span>
-                      )}
-                    </div>
-                  ))}
+                          <Icon size={14} style={{ color: iconColor }} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-mono text-[9px] text-dark-500 tracking-widest uppercase mb-0.5">
+                            {label}
+                          </div>
+                          <span className={`text-xs flex items-center gap-1 truncate transition-colors ${
+                            href ? 'text-primary-500 group-hover:text-primary-400' : 'text-dark-100'
+                          }`}>
+                            {value}
+                            {href && <ExternalLink size={9} className="shrink-0 opacity-50" />}
+                          </span>
+                        </div>
+                      </>
+                    );
+                    return href ? (
+                      <a
+                        key={label}
+                        href={href}
+                        target={href.startsWith('http') ? '_blank' : undefined}
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 px-5 py-3 hover:bg-dark-700/20 transition-colors group"
+                      >
+                        {rowContent}
+                      </a>
+                    ) : (
+                      <div key={label} className="flex items-center gap-3 px-5 py-3 group">
+                        {rowContent}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -377,7 +414,7 @@ export default function AboutPage() {
       <div className="h-px bg-dark-700" />
 
       {/* Skills */}
-      <section className="section bg-dark-800/30">
+      <section className="section" style={{ background: 'var(--section-alt-bg)' }}>
         <div className="section-inner">
           <p className="section-label">Technical Stack</p>
           <h2 className="section-title">
@@ -403,7 +440,8 @@ export default function AboutPage() {
                       {items.map(skill => (
                         <span
                           key={skill}
-                          className="px-2 py-0.5 text-[11px] font-mono text-dark-300 bg-dark-900/60 border border-dark-700/80 hover:border-dark-500 hover:text-dark-100 transition-colors cursor-default"
+                          className="px-2 py-0.5 text-[11px] font-mono text-dark-300 border border-dark-700/80 hover:border-dark-500 hover:text-dark-100 transition-colors cursor-default"
+                          style={{ background: 'var(--item-bg)' }}
                         >
                           {skill}
                         </span>
@@ -464,7 +502,7 @@ export default function AboutPage() {
                   {/* Tags */}
                   <div className="flex flex-wrap gap-1.5">
                     {exp.tags.map(tag => (
-                      <span key={tag} className="px-2 py-0.5 text-[10px] font-mono border border-dark-700 text-dark-500 bg-dark-800/40 hover:text-dark-300 hover:border-dark-600 transition-colors">
+                      <span key={tag} className="px-2 py-0.5 text-[10px] font-mono border border-dark-700 text-dark-500 hover:text-dark-300 hover:border-dark-600 transition-colors" style={{ background: 'var(--item-bg)' }}>
                         {tag}
                       </span>
                     ))}
@@ -484,7 +522,7 @@ export default function AboutPage() {
       <div className="h-px bg-dark-700" />
 
       {/* Certifications */}
-      <section className="section bg-dark-800/30">
+      <section className="section" style={{ background: 'var(--section-alt-bg)' }}>
         <div className="section-inner">
           <p className="section-label">Recognition</p>
           <h2 className="section-title">
@@ -493,7 +531,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-dark-700">
             {CERTIFICATIONS.map(cert => (
-              <div key={cert.num} className="bg-dark-800/50 backdrop-blur-sm p-5 flex gap-4 items-start hover:bg-dark-800/80 transition-colors" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}>
+              <div key={cert.num} className="backdrop-blur-sm p-5 flex gap-4 items-start hover:opacity-90 transition-opacity" style={{ background: 'var(--item-bg)', boxShadow: 'var(--item-shadow)' }}>
                 <span className="font-mono text-xs text-primary-500 shrink-0 mt-1">{cert.num}</span>
                 <div>
                   <h3 className="font-heading font-semibold text-dark-100 text-sm mb-2 leading-snug">
