@@ -5,15 +5,72 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  /* ── Dark theme (default) ── */
+  :root, [data-theme="dark"] {
+    --primary-50:  230 255 254;
+    --primary-100: 204 255 253;
+    --primary-200: 153 255 250;
+    --primary-300: 102 255 247;
+    --primary-400: 51 255 244;
+    --primary-500: 0 240 230;
+    --primary-600: 0 192 184;
+    --primary-700: 0 144 136;
+    --primary-800: 0 96 88;
+    --primary-900: 0 48 40;
+
+    --dark-900: 3 7 18;
+    --dark-800: 13 17 23;
+    --dark-700: 22 27 34;
+    --dark-600: 33 38 45;
+    --dark-500: 48 54 61;
+    --dark-400: 72 79 88;
+    --dark-300: 110 118 129;
+    --dark-200: 139 148 158;
+    --dark-100: 201 209 217;
+    --dark-50:  230 237 243;
+
     --accent: #00f0e6;
-    --accent-dim: rgba(0, 240, 230, 0.15);
-    --bg-primary: #030712;
-    --bg-secondary: #0d1117;
-    --bg-card: #161b22;
-    --text-primary: #e6edf3;
-    --text-secondary: #8b949e;
-    --border: #21262d;
+    --card-bg: rgba(22, 27, 34, 0.50);
+    --badge-bg: rgba(22, 27, 34, 0.55);
+    --orb-teal:   rgba(0, 240, 230, 0.16);
+    --orb-purple: rgba(167, 139, 250, 0.14);
+    --orb-blue:   rgba(96, 165, 250, 0.11);
+    --body-gradient: linear-gradient(155deg, #0a1f3d 0%, #080f20 38%, #07101e 72%, #100628 100%);
+    --noise-opacity: 0.02;
+  }
+
+  /* ── Light theme ── */
+  [data-theme="light"] {
+    --primary-50:  240 255 255;
+    --primary-100: 204 244 242;
+    --primary-200: 153 222 220;
+    --primary-300: 0 176 190;
+    --primary-400: 0 153 168;
+    --primary-500: 0 130 150;
+    --primary-600: 0 104 120;
+    --primary-700: 0 80 94;
+    --primary-800: 0 60 70;
+    --primary-900: 0 40 48;
+
+    --dark-900: 248 250 252;
+    --dark-800: 241 245 249;
+    --dark-700: 226 232 240;
+    --dark-600: 203 213 225;
+    --dark-500: 148 163 184;
+    --dark-400: 100 116 139;
+    --dark-300: 71 85 105;
+    --dark-200: 51 65 85;
+    --dark-100: 30 41 59;
+    --dark-50:  15 23 42;
+
+    --accent: #008296;
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --badge-bg: rgba(241, 245, 249, 0.90);
+    --orb-teal:   rgba(0, 180, 200, 0.12);
+    --orb-purple: rgba(139, 92, 246, 0.09);
+    --orb-blue:   rgba(59, 130, 246, 0.08);
+    --body-gradient: linear-gradient(155deg, #dff4f8 0%, #f0f7ff 38%, #f5f0ff 72%, #e8f5f0 100%);
+    --noise-opacity: 0.015;
   }
 
   * {
@@ -28,7 +85,7 @@
   }
 
   body {
-    background: linear-gradient(155deg, #0a1f3d 0%, #080f20 38%, #07101e 72%, #100628 100%);
+    background: var(--body-gradient);
     color: var(--text-primary);
     font-family: 'DM Sans', sans-serif;
     overflow-x: hidden;
@@ -80,8 +137,8 @@
   .card {
     @apply backdrop-blur-md border border-dark-600/60 p-6;
     @apply hover:border-primary-500/40 transition-all duration-300;
-    background: rgba(22, 27, 34, 0.50);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 2px 12px rgba(0, 0, 0, 0.25);
+    background: var(--card-bg);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 12px rgba(0, 0, 0, 0.15);
     clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
   }
 
@@ -120,7 +177,7 @@
     @apply inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono backdrop-blur-sm;
     @apply border border-dark-600/70 text-dark-100;
     @apply hover:border-primary-500/50 hover:text-primary-500 transition-all duration-200;
-    background: rgba(22, 27, 34, 0.55);
+    background: var(--badge-bg);
   }
 
   /* ── Terminal text effect ── */
@@ -135,7 +192,7 @@
     position: fixed;
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.02;
+    opacity: var(--noise-opacity, 0.02);
     pointer-events: none;
     z-index: 999;
   }
@@ -182,7 +239,7 @@
 
 @layer utilities {
   .text-gradient {
-    background: linear-gradient(135deg, #00f0e6 0%, #00c0b8 50%, #33fff4 100%);
+    background: linear-gradient(135deg, rgb(var(--primary-500)) 0%, rgb(var(--primary-600)) 50%, rgb(var(--primary-400)) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -200,13 +257,13 @@
 
 /* ── Prose styles for markdown content ── */
 .prose-dark {
-  color: var(--text-primary);
+  color: rgb(var(--dark-50));
   max-width: 720px;
 }
 
 .prose-dark h1, .prose-dark h2, .prose-dark h3 {
   font-family: 'Syne', sans-serif;
-  color: #e6edf3;
+  color: rgb(var(--dark-50));
   font-weight: 700;
 }
 
@@ -215,23 +272,23 @@
 
 .prose-dark p {
   font-family: 'DM Sans', sans-serif;
-  color: #8b949e;
+  color: rgb(var(--dark-200));
   line-height: 1.8;
   margin: 1rem 0;
 }
 
 .prose-dark code {
   font-family: 'Fira Code', monospace;
-  background: #161b22;
-  border: 1px solid #21262d;
+  background: rgb(var(--dark-700));
+  border: 1px solid rgb(var(--dark-600));
   padding: 0.2em 0.5em;
   font-size: 0.875em;
-  color: #00f0e6;
+  color: rgb(var(--primary-500));
 }
 
 .prose-dark pre {
-  background: #0d1117;
-  border: 1px solid #21262d;
+  background: rgb(var(--dark-800));
+  border: 1px solid rgb(var(--dark-600));
   padding: 1.5rem;
   overflow-x: auto;
   margin: 1.5rem 0;
@@ -244,30 +301,30 @@
 }
 
 .prose-dark a {
-  color: #00f0e6;
+  color: rgb(var(--primary-500));
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.prose-dark ul { padding-left: 1.5rem; color: #8b949e; }
+.prose-dark ul { padding-left: 1.5rem; color: rgb(var(--dark-200)); }
 .prose-dark li { margin: 0.5rem 0; }
 
 .prose-dark blockquote {
-  border-left: 3px solid #00f0e6;
+  border-left: 3px solid rgb(var(--primary-500));
   padding-left: 1rem;
-  color: #6e7681;
+  color: rgb(var(--dark-300));
   font-style: italic;
 }
 
 /* ── Chat widget ── */
 .chat-bubble-in {
   @apply bg-dark-700 text-dark-100 rounded-tr-xl rounded-bl-xl rounded-br-xl px-4 py-2.5 max-w-xs;
-  border: 1px solid rgba(0, 240, 230, 0.15);
+  border: 1px solid rgb(var(--primary-500) / 0.15);
 }
 
 .chat-bubble-out {
-  @apply bg-primary-500/20 text-primary-300 rounded-tl-xl rounded-bl-xl rounded-br-xl px-4 py-2.5 max-w-xs;
-  border: 1px solid rgba(0, 240, 230, 0.3);
+  @apply bg-primary-500/20 text-primary-400 rounded-tl-xl rounded-bl-xl rounded-br-xl px-4 py-2.5 max-w-xs;
+  border: 1px solid rgb(var(--primary-500) / 0.3);
 }
 
 /* ── Page transitions ── */

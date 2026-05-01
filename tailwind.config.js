@@ -8,30 +8,30 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Palet: Industrial Dark + Electric Cyan accent
+        // CSS-variable driven — swaps automatically with data-theme
         primary: {
-          50:  '#e6fffe',
-          100: '#ccfffd',
-          200: '#99fffa',
-          300: '#66fff7',
-          400: '#33fff4',
-          500: '#00f0e6',   // main accent
-          600: '#00c0b8',
-          700: '#009088',
-          800: '#006058',
-          900: '#003028',
+          50:  'rgb(var(--primary-50)  / <alpha-value>)',
+          100: 'rgb(var(--primary-100) / <alpha-value>)',
+          200: 'rgb(var(--primary-200) / <alpha-value>)',
+          300: 'rgb(var(--primary-300) / <alpha-value>)',
+          400: 'rgb(var(--primary-400) / <alpha-value>)',
+          500: 'rgb(var(--primary-500) / <alpha-value>)',
+          600: 'rgb(var(--primary-600) / <alpha-value>)',
+          700: 'rgb(var(--primary-700) / <alpha-value>)',
+          800: 'rgb(var(--primary-800) / <alpha-value>)',
+          900: 'rgb(var(--primary-900) / <alpha-value>)',
         },
         dark: {
-          900: '#030712',   // bg utama
-          800: '#0d1117',   // card bg
-          700: '#161b22',   // border/subtle
-          600: '#21262d',   // hover state
-          500: '#30363d',   // divider
-          400: '#484f58',   // muted text
-          300: '#6e7681',   // placeholder
-          200: '#8b949e',   // secondary text
-          100: '#c9d1d9',   // body text
-          50:  '#e6edf3',   // heading
+          900: 'rgb(var(--dark-900) / <alpha-value>)',
+          800: 'rgb(var(--dark-800) / <alpha-value>)',
+          700: 'rgb(var(--dark-700) / <alpha-value>)',
+          600: 'rgb(var(--dark-600) / <alpha-value>)',
+          500: 'rgb(var(--dark-500) / <alpha-value>)',
+          400: 'rgb(var(--dark-400) / <alpha-value>)',
+          300: 'rgb(var(--dark-300) / <alpha-value>)',
+          200: 'rgb(var(--dark-200) / <alpha-value>)',
+          100: 'rgb(var(--dark-100) / <alpha-value>)',
+          50:  'rgb(var(--dark-50)  / <alpha-value>)',
         },
       },
       fontFamily: {

@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, X, Github, Linkedin, Twitter, Mail, Zap } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Twitter, Mail, Zap, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 // ── Navbar ─────────────────────────────────────────────────────────────
 
@@ -16,8 +17,11 @@ const NAV_LINKS = [
 
 function Navbar() {
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -71,6 +75,15 @@ function Navbar() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="w-8 h-8 border border-dark-600 flex items-center justify-center text-dark-300 hover:border-primary-500 hover:text-primary-500 transition-all"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+          )}
           <a
             href="https://wa.me/6288971759690?text=Halo%20Rangga!%20Saya%20tertarik%20untuk%20hire%20kamu."
             target="_blank"
@@ -81,14 +94,25 @@ function Navbar() {
           </a>
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden text-dark-200 hover:text-primary-500 transition-colors"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        {/* Mobile: theme + hamburger */}
+        <div className="md:hidden flex items-center gap-2">
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="w-8 h-8 border border-dark-600 flex items-center justify-center text-dark-300 hover:border-primary-500 hover:text-primary-500 transition-all"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+          )}
+          <button
+            className="text-dark-200 hover:text-primary-500 transition-colors"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile menu */}
@@ -229,26 +253,26 @@ interface LayoutProps {
 export default function Layout({ children, showChat = true }: LayoutProps) {
   return (
     <div className="min-h-screen bg-dark-900 noise-overlay">
-      {/* Ambient background orbs */}
+      {/* Ambient background orbs — colors driven by CSS variables */}
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden z-0">
         <div style={{
           position: 'absolute', top: '-10%', left: '-5%',
           width: 600, height: 600, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,240,230,0.16) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--orb-teal) 0%, transparent 70%)',
           filter: 'blur(80px)',
           animation: 'orbFloat 32s ease-in-out infinite',
         }} />
         <div style={{
           position: 'absolute', top: '5%', right: '-8%',
           width: 500, height: 500, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(167,139,250,0.14) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--orb-purple) 0%, transparent 70%)',
           filter: 'blur(70px)',
           animation: 'orbFloat 40s ease-in-out infinite reverse',
         }} />
         <div style={{
           position: 'absolute', bottom: '10%', left: '30%',
           width: 700, height: 700, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(96,165,250,0.11) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--orb-blue) 0%, transparent 70%)',
           filter: 'blur(90px)',
           animation: 'orbFloat 48s ease-in-out infinite',
         }} />
