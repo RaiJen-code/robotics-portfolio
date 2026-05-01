@@ -154,89 +154,80 @@ function Navbar() {
 
 function Footer() {
   return (
-    <footer className="border-t border-dark-700 bg-dark-900 mt-20">
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+    <footer
+      className="border-t border-dark-700/60 mt-16"
+      style={{ background: 'rgb(var(--dark-800) / 0.7)', backdropFilter: 'blur(12px)' }}
+    >
+      <div className="max-w-6xl mx-auto px-4">
+
+        {/* ── Main row ── */}
+        <div className="py-5 flex flex-col md:flex-row items-center gap-5 md:gap-0 justify-between">
+
           {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 border border-primary-500 flex items-center justify-center">
-                <Zap size={16} className="text-primary-500" />
-              </div>
-              <span className="font-display text-sm text-dark-50">
-                RaiJen<span className="text-primary-500">.dev</span>
-              </span>
+          <Link href="/" className="flex items-center gap-2 group shrink-0">
+            <div className="w-7 h-7 border border-primary-500/60 flex items-center justify-center group-hover:border-primary-500 transition-colors">
+              <Zap size={13} className="text-primary-500" />
             </div>
-            <p className="text-dark-300 text-sm font-body leading-relaxed">
-              Robotics Engineer & AI Developer. Membangun sistem cerdas dari hardware hingga software.
-            </p>
-            <div className="flex gap-3 mt-4">
-              {[
-                { href: 'https://github.com/RaiJen-code', icon: Github },
-                { href: 'https://linkedin.com', icon: Linkedin },
-                { href: 'mailto:razetya100@gmail.com', icon: Mail },
-              ].map(({ href, icon: Icon }) => (
-                <a
-                  key={href}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 border border-dark-600 flex items-center justify-center text-dark-300 hover:border-primary-500 hover:text-primary-500 transition-all"
-                >
-                  <Icon size={14} />
-                </a>
-              ))}
-            </div>
-          </div>
+            <span className="font-display text-sm text-dark-100">
+              RaiJen<span className="text-primary-500">.dev</span>
+            </span>
+          </Link>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-heading text-sm font-semibold text-dark-50 mb-4 tracking-wider uppercase">
-              Navigate
-            </h3>
-            <ul className="space-y-2">
-              {NAV_LINKS.map(link => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-dark-300 hover:text-primary-500 text-sm transition-colors">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Nav — center */}
+          <nav className="flex items-center gap-0.5 flex-wrap justify-center">
+            {NAV_LINKS.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="px-3 py-1 font-mono text-[11px] text-dark-400 hover:text-dark-50 transition-colors tracking-wide"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
-          {/* Services */}
-          <div>
-            <h3 className="font-heading text-sm font-semibold text-dark-50 mb-4 tracking-wider uppercase">
-              Services
-            </h3>
-            <ul className="space-y-2 text-sm text-dark-300">
-              <li className="hover:text-primary-500 transition-colors cursor-pointer">Konsultasi Teknik</li>
-              <li className="hover:text-primary-500 transition-colors cursor-pointer">3D Printing</li>
-              <li className="hover:text-primary-500 transition-colors cursor-pointer">Print Dokumen</li>
-              <li className="hover:text-primary-500 transition-colors cursor-pointer">Custom Robotics</li>
-            </ul>
-
-            <div className="mt-6 flex items-center gap-2">
-              <span className="status-online" />
-              <span className="text-xs text-dark-300 font-mono">Available for new projects</span>
-            </div>
+          {/* Socials — right */}
+          <div className="flex items-center gap-2 shrink-0">
+            {[
+              { href: 'https://github.com/RaiJen-code', icon: Github },
+              { href: 'https://linkedin.com', icon: Linkedin },
+              { href: 'mailto:razetya100@gmail.com', icon: Mail },
+            ].map(({ href, icon: Icon }) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 border border-dark-600/70 flex items-center justify-center text-dark-400 hover:border-primary-500 hover:text-primary-500 transition-all"
+              >
+                <Icon size={13} />
+              </a>
+            ))}
           </div>
         </div>
 
-        <div className="border-t border-dark-700 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-dark-400 text-xs font-mono">
-            © {new Date().getFullYear()} RaiJen — Built with Next.js + GitHub Pages
+        {/* ── Bottom bar ── */}
+        <div className="border-t border-dark-700/40 py-3 flex flex-col sm:flex-row justify-between items-center gap-2">
+          <p className="font-mono text-[10px] text-dark-500">
+            © {new Date().getFullYear()} Rangga Prasetya · Next.js + GitHub Pages
           </p>
-          <a
-            href="https://wa.me/6288971759690"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-dark-500 text-xs font-mono hover:text-green-500 transition-colors"
-          >
-            Chat via <span className="text-green-500">WhatsApp</span>
-          </a>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              <span className="font-mono text-[10px] text-dark-500">Available for projects</span>
+            </div>
+            <span className="text-dark-600 text-xs">·</span>
+            <a
+              href="https://wa.me/6288971759690"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-[10px] text-dark-500 hover:text-green-500 transition-colors"
+            >
+              WhatsApp
+            </a>
+          </div>
         </div>
+
       </div>
     </footer>
   );

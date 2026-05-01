@@ -1,6 +1,6 @@
 // src/components/sections/Hero.tsx
 import { useState, useEffect } from 'react';
-import { ArrowRight, Download, MessageCircle, ChevronDown, Cpu, Bot, Wrench } from 'lucide-react';
+import { ArrowRight, Download, ChevronDown, Cpu, Bot, Wrench } from 'lucide-react';
 import { imgSrc } from '../../lib/utils';
 
 const TYPED_ROLES = [
@@ -145,20 +145,19 @@ export default function Hero() {
               >
                 Book Consultation
               </a>
-              <button
-                onClick={() => window.dispatchEvent(new CustomEvent('openChat'))}
-                className="btn-ghost text-sm py-2 border border-dark-600 hover:border-dark-400"
-              >
-                <MessageCircle size={14} />
-                Chat
-              </button>
+              {/* CV download — styled as a distinct action */}
               <a
                 href={imgSrc('/rangga_resume.pdf')}
                 download="Rangga_Prasetya_CV.pdf"
-                className="btn-ghost text-sm py-2"
+                className="inline-flex items-center gap-2.5 px-3.5 py-2 border border-dark-600 hover:border-primary-500/60 hover:bg-primary-500/5 transition-all group"
               >
-                <Download size={14} />
-                CV
+                <div className="w-6 h-6 border border-dark-500 group-hover:border-primary-500/60 flex items-center justify-center transition-all shrink-0 bg-dark-700/50 group-hover:bg-primary-500/10">
+                  <Download size={10} className="text-dark-300 group-hover:text-primary-500 transition-colors" />
+                </div>
+                <div className="leading-none">
+                  <div className="font-mono text-[11px] text-dark-100 group-hover:text-primary-500 transition-colors">Resume</div>
+                  <div className="font-mono text-[9px] text-dark-500 mt-0.5">.PDF · CV</div>
+                </div>
               </a>
             </div>
 
