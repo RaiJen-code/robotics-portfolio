@@ -2,9 +2,9 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { 
-  Cpu, Printer, FileText, Check, Clock, 
-  Upload, Send, AlertCircle, CheckCircle, ChevronDown
+import {
+  Cpu, Printer, FileText, Check,
+  Upload, Send, AlertCircle, CheckCircle
 } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import { imgSrc } from '../lib/utils';
@@ -20,7 +20,7 @@ const SERVICES = [
     title: 'Konsultasi Teknik',
     subtitle: 'Technical Consulting',
     image: '/images/services/konsultasi.jpg',
-    description: 'Sesi konsultasi 1-on-1 untuk robotics, embedded systems, AI integration, sistem kontrol, atau arsitektur teknikal project kamu.',
+    description: 'Konsultasi teknik 1-on-1 untuk robotics, embedded systems, AI integration, sistem kontrol, atau arsitektur teknikal project kamu. Bisa dilakukan secara online maupun offline.',
     features: [
       'Analisis arsitektur sistem',
       'Review kode & debugging',
@@ -29,9 +29,9 @@ const SERVICES = [
       'Follow-up via chat',
     ],
     pricing: [
-      { label: 'Sesi 1 Jam', price: 'Rp 150.000', note: 'Video call + dokumentasi' },
-      { label: 'Paket 3 Sesi', price: 'Rp 400.000', note: 'Hemat 11%' },
-      { label: 'Bulanan (8 sesi)', price: 'Rp 950.000', note: 'Hemat 21%' },
+      { label: 'Online', price: 'Tersedia', note: 'Google Meet / Zoom / WA Video' },
+      { label: 'Offline', price: 'Tersedia', note: 'Sesuai lokasi & kesepakatan' },
+      { label: 'Harga', price: 'Fleksibel', note: 'Disesuaikan scope & kebutuhan' },
     ],
     badge: 'Paling Populer',
     accentColor: 'border-primary-500/40',
@@ -99,7 +99,6 @@ interface FormData {
   phone: string;
   subject: string;
   description: string;
-  urgency: 'normal' | 'urgent' | 'asap';
   budget: string;
 }
 
@@ -110,7 +109,6 @@ const INITIAL_FORM: FormData = {
   phone: '',
   subject: '',
   description: '',
-  urgency: 'normal',
   budget: '',
 };
 
@@ -148,7 +146,6 @@ function ServiceForm() {
     setErrorMsg('');
 
     const serviceLabel = SERVICES.find(s => s.id === form.type)?.title ?? form.type;
-    const urgencyLabel = form.urgency === 'asap' ? 'ASAP' : form.urgency === 'urgent' ? 'Urgent (<24 jam)' : 'Normal (1-3 hari)';
 
     const lines = [
       `Halo Rangga! Saya ingin request service dari portfolio kamu.`,
@@ -158,8 +155,7 @@ function ServiceForm() {
       form.email ? `*Email:* ${form.email}` : '',
       form.phone ? `*WhatsApp:* ${form.phone}` : '',
       form.subject ? `*Judul Project:* ${form.subject}` : '',
-      `*Urgency:* ${urgencyLabel}`,
-      form.budget ? `*Budget:* ${form.budget}` : '',
+      form.budget ? `*Estimasi Budget:* ${form.budget}` : '',
       ``,
       `*Detail Kebutuhan:*`,
       form.description,
@@ -285,33 +281,6 @@ function ServiceForm() {
             placeholder="Jelaskan kebutuhan kamu secara detail: tujuan, spesifikasi, deadline, kendala yang dihadapi, dll."
             className="w-full bg-dark-700 border border-dark-600 px-4 py-3 text-sm font-body text-dark-100 placeholder:text-dark-500 focus:outline-none focus:border-primary-500/60 transition-colors resize-none"
           />
-        </div>
-
-        {/* Urgency */}
-        <div>
-          <label className="block font-mono text-xs text-dark-300 mb-2 tracking-wider uppercase">
-            Urgency
-          </label>
-          <div className="flex gap-2">
-            {([
-              { value: 'normal', label: '⏱ Normal (1-3 hari)' },
-              { value: 'urgent', label: '🔥 Urgent (< 24 jam)' },
-              { value: 'asap', label: '⚡ ASAP' },
-            ] as const).map(opt => (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => setForm(prev => ({ ...prev, urgency: opt.value }))}
-                className={`flex-1 py-2 px-3 text-xs font-mono border transition-all ${
-                  form.urgency === opt.value
-                    ? 'border-primary-500 bg-primary-500/10 text-primary-500'
-                    : 'border-dark-600 text-dark-400 hover:border-dark-400'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* File upload (3D printing & dokumen) */}
@@ -536,9 +505,9 @@ export default function ServicesPage() {
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-xs font-mono text-dark-400">Proses order</p>
+                <p className="text-xs font-mono text-dark-400">Skema pembayaran</p>
                 <p className="font-heading font-semibold text-dark-50">
-                  DP 50% setelah konfirmasi
+                  Diskusi & disepakati bersama
                 </p>
               </div>
             </div>
@@ -559,10 +528,10 @@ export default function ServicesPage() {
               <div className="space-y-4">
                 {[
                   { step: '01', title: 'Submit Request', desc: 'Isi form dengan detail kebutuhan kamu' },
-                  { step: '02', title: 'Konfirmasi', desc: 'Saya review dan konfirmasi feasibility + harga' },
-                  { step: '03', title: 'Pembayaran', desc: 'DP 50% setelah sepakat dengan scope' },
+                  { step: '02', title: 'Konfirmasi', desc: 'Saya review dan konfirmasi feasibility + estimasi harga' },
+                  { step: '03', title: 'Pembayaran', desc: 'Skema & metode pembayaran disepakati bersama' },
                   { step: '04', title: 'Pengerjaan', desc: 'Project dikerjakan sesuai timeline yang disepakati' },
-                  { step: '05', title: 'Selesai & Pelunasan', desc: 'Terima hasil, pelunasan sisa 50%' },
+                  { step: '05', title: 'Selesai', desc: 'Terima hasil sesuai spesifikasi yang telah disepakati' },
                 ].map(item => (
                   <div key={item.step} className="flex gap-4">
                     <span className="font-display text-lg text-primary-500 font-bold w-8 flex-shrink-0">

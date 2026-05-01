@@ -20,8 +20,8 @@ const SERVICES_PREVIEW = [
     id: 'consultation',
     icon: Cpu,
     title: 'Konsultasi Teknik',
-    tagline: 'Robotics, AI, embedded — sesi 1-on-1',
-    price: 'mulai Rp 150.000 / sesi',
+    tagline: 'Robotics, AI, embedded — online & offline',
+    price: 'Harga fleksibel',
     color: '#00f0e6',
   },
   {
@@ -115,7 +115,7 @@ function SkillsSection() {
   const skillLen  = ((SKILL_DEG - SKILL_GAP) / 360) * OC;
 
   return (
-    <section className="section" ref={sectionRef}>
+    <section className="section" style={{ paddingTop: '2.5rem' }} ref={sectionRef}>
       <div className="section-inner">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 

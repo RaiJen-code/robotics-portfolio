@@ -53,7 +53,7 @@ export default function Hero() {
   }, [charIndex, isDeleting, roleIndex]);
 
   return (
-    <section className="relative pb-16">
+    <section className="relative pb-4">
 
       {/* ── Cover Banner ─────────────────────────────────────────────── */}
       <div className="relative w-full h-44 md:h-56 overflow-hidden">
@@ -190,7 +190,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div className="flex flex-col items-center gap-1.5 text-dark-500 mt-12">
+      <div className="flex flex-col items-center gap-1.5 text-dark-500 mt-5">
         <span className="font-mono text-xs tracking-widest">SCROLL</span>
         <ChevronDown size={14} className="animate-bounce" />
       </div>
