@@ -18,86 +18,97 @@ const PHOTOS = [
 
 function PhotoSlideshow() {
   const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
 
-  // Auto-rotate every 4 seconds
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent(prev => (prev + 1) % PHOTOS.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
+    if (paused) return;
+    const t = setInterval(() => setCurrent(c => (c + 1) % PHOTOS.length), 5000);
+    return () => clearInterval(t);
+  }, [paused]);
 
-  function prev() {
-    setCurrent(i => (i - 1 + PHOTOS.length) % PHOTOS.length);
-  }
-  function next() {
-    setCurrent(i => (i + 1) % PHOTOS.length);
-  }
+  const prev = () => setCurrent(c => (c - 1 + PHOTOS.length) % PHOTOS.length);
+  const next = () => setCurrent(c => (c + 1) % PHOTOS.length);
 
   return (
-    <div className="relative w-full overflow-hidden bg-dark-800 border border-dark-600 mb-6 group"
-      style={{ aspectRatio: '4/3' }}
+    <div
+      className="relative overflow-hidden bg-dark-800 border border-dark-600/80 mb-4 group ring-1 ring-primary-500/10"
+      style={{ aspectRatio: '16/9' }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
-      {/* Fallback — rendered first so images always appear on top */}
+      <style>{`@keyframes photoFill{from{width:0}to{width:100%}}`}</style>
+
+      {/* Fallback */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-dark-600 pointer-events-none">
-        <div className="w-16 h-16 border-2 border-dashed border-dark-600 flex items-center justify-center mb-2">
-          <span className="text-2xl">📷</span>
-        </div>
-        <span className="text-xs font-mono text-dark-600">Tambahkan foto kamu</span>
+        <span className="text-3xl mb-1">📷</span>
+        <span className="text-xs font-mono">Tambahkan foto kamu</span>
       </div>
 
-      {/* Slides — rendered after fallback so they sit on top */}
+      {/* Slides — scale+fade transition */}
       {PHOTOS.map((photo, i) => (
         <img
           key={photo.src}
           src={imgSrc(photo.src)}
           alt={photo.alt}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
-          style={{ opacity: i === current ? 1 : 0 }}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: i === current ? 1 : 0,
+            transform: i === current ? 'scale(1)' : 'scale(1.06)',
+            transition: 'opacity 1100ms cubic-bezier(0.4,0,0.2,1), transform 1100ms cubic-bezier(0.4,0,0.2,1)',
+          }}
         />
       ))}
 
-      {/* Bottom gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-dark-900/70 via-transparent to-transparent pointer-events-none" />
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-dark-900/75 via-dark-900/10 to-transparent pointer-events-none z-10" />
 
-      {/* Corner accent */}
-      <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-primary-500/60" />
-      <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-primary-500/60" />
+      {/* Corner accents */}
+      <div className="absolute top-3 left-3 w-5 h-5 border-l-2 border-t-2 border-primary-500/80 z-20 pointer-events-none" />
+      <div className="absolute top-3 right-3 w-5 h-5 border-r-2 border-t-2 border-primary-500/80 z-20 pointer-events-none" />
 
-      {/* Counter badge */}
-      <div className="absolute top-3 right-3 bg-dark-900/70 backdrop-blur-sm text-xs font-mono text-dark-300 px-2 py-0.5 border border-dark-600">
-        {current + 1} / {PHOTOS.length}
+      {/* Bottom bar: counter + dots */}
+      <div className="absolute bottom-3 left-0 right-0 px-3 flex items-center justify-between z-20">
+        <span className="font-mono text-[10px] text-dark-400 bg-dark-900/60 backdrop-blur-sm px-1.5 py-0.5">
+          {String(current + 1).padStart(2, '0')} / {String(PHOTOS.length).padStart(2, '0')}
+        </span>
+        <div className="flex items-center gap-1.5">
+          {PHOTOS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              aria-label={`Photo ${i + 1}`}
+              className="transition-all duration-300"
+              style={{
+                width: i === current ? '16px' : '5px',
+                height: '3px',
+                background: i === current ? '#00f0e6' : 'rgba(255,255,255,0.2)',
+              }}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Dot indicators */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
-        {PHOTOS.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className="transition-all duration-300 rounded-none"
-            style={{
-              width: i === current ? '20px' : '6px',
-              height: '4px',
-              background: i === current ? 'rgb(0,240,230)' : 'rgba(255,255,255,0.3)',
-            }}
-            aria-label={`Go to photo ${i + 1}`}
-          />
-        ))}
-      </div>
+      {/* Progress bar */}
+      {!paused && (
+        <div
+          key={`p-${current}`}
+          className="absolute bottom-0 left-0 h-[2px] bg-primary-500/70 z-20"
+          style={{ animation: 'photoFill 5s linear forwards' }}
+        />
+      )}
 
-      {/* Prev / Next arrows (visible on hover) */}
+      {/* Arrows */}
       <button
         onClick={prev}
-        className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-dark-900/70 border border-dark-600 text-dark-200 hover:text-primary-500 hover:border-primary-500/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
-        aria-label="Previous photo"
+        className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-dark-900/60 backdrop-blur-sm border border-dark-600 text-dark-300 hover:text-primary-500 hover:border-primary-500/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-20"
+        aria-label="Previous"
       >
-        <ChevronLeft size={16} />
+        <ChevronLeft size={14} />
       </button>
       <button
         onClick={next}
-        className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-dark-900/70 border border-dark-600 text-dark-200 hover:text-primary-500 hover:border-primary-500/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
-        aria-label="Next photo"
+        className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-dark-900/60 backdrop-blur-sm border border-dark-600 text-dark-300 hover:text-primary-500 hover:border-primary-500/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-20"
+        aria-label="Next"
       >
         <ChevronRight size={16} />
       </button>
@@ -246,7 +257,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="section">
         <div className="section-inner">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             {/* Left: Bio */}
             <div>
               <p className="section-label">About Me</p>
@@ -254,7 +265,7 @@ export default function AboutPage() {
                 Rangga <span className="text-gradient">Prasetya</span>
               </h1>
 
-              <div className="space-y-4 text-dark-200 leading-relaxed mb-8">
+              <div className="space-y-3 text-dark-200 leading-relaxed mb-5 text-sm">
                 <p>
                   I am an <span className="text-dark-50 font-medium">Electrical Engineering graduate</span> from
                   Institut Teknologi PLN, specializing in the intersection of robotics, embedded systems, and machine
@@ -276,10 +287,10 @@ export default function AboutPage() {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-2 gap-px bg-dark-700 mb-8">
+              <div className="grid grid-cols-2 gap-px bg-dark-700 mb-5">
                 {STATS.map(stat => (
-                  <div key={stat.label} className="bg-dark-800 p-6">
-                    <div className="font-heading text-4xl font-bold text-gradient mb-1">{stat.value}</div>
+                  <div key={stat.label} className="bg-dark-800 p-4">
+                    <div className="font-heading text-3xl font-bold text-gradient mb-0.5">{stat.value}</div>
                     <div className="font-mono text-xs text-dark-400 tracking-wider uppercase">{stat.label}</div>
                   </div>
                 ))}
@@ -302,11 +313,11 @@ export default function AboutPage() {
               <PhotoSlideshow />
 
               {/* Profile info */}
-              <div className="card mb-6">
-                <h2 className="font-heading font-semibold text-dark-50 mb-6 text-sm tracking-widest uppercase">
+              <div className="card mb-4">
+                <h2 className="font-heading font-semibold text-dark-50 mb-3 text-sm tracking-widest uppercase">
                   Personal Info
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {[
                     { icon: null, label: 'Full Name', value: 'Rangga Prasetya Adiwijaya' },
                     { icon: MapPin, label: 'Location', value: 'Jakarta, Indonesia' },
@@ -316,8 +327,8 @@ export default function AboutPage() {
                     { icon: Github, label: 'GitHub', value: 'github.com/RaiJen-code', href: 'https://github.com/RaiJen-code' },
                     { icon: GraduationCap, label: 'Degree', value: 'B.Eng Electrical Engineering, IT-PLN (2021–2025)' },
                   ].map(({ label, value, href, icon: Icon }) => (
-                    <div key={label} className="flex gap-4 border-b border-dark-700 pb-4 last:border-0 last:pb-0">
-                      <span className="font-mono text-xs text-dark-400 tracking-widest uppercase w-28 pt-0.5 shrink-0">
+                    <div key={label} className="flex gap-3 border-b border-dark-700/60 pb-2 last:border-0 last:pb-0">
+                      <span className="font-mono text-[10px] text-dark-500 tracking-widest uppercase w-20 pt-0.5 shrink-0">
                         {label}
                       </span>
                       {href ? (
@@ -375,8 +386,8 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-dark-700">
             {SKILLS.map(group => (
-              <div key={group.category} className="bg-dark-800 p-8">
-                <h3 className="font-mono text-xs text-primary-500 tracking-widest uppercase mb-6 pb-4 border-b border-dark-700">
+              <div key={group.category} className="bg-dark-800 p-5">
+                <h3 className="font-mono text-xs text-primary-500 tracking-widest uppercase mb-4 pb-3 border-b border-dark-700">
                   {group.category}
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -406,18 +417,18 @@ export default function AboutPage() {
             {EXPERIENCE.map((exp, i) => (
               <div
                 key={i}
-                className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 md:gap-12 py-12 border-b border-dark-700 first:border-t"
+                className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-4 md:gap-8 py-6 border-b border-dark-700 first:border-t"
               >
                 <div>
-                  <p className="font-mono text-xs text-dark-400 tracking-wider mb-2">{exp.org}</p>
+                  <p className="font-mono text-xs text-dark-400 tracking-wider mb-1">{exp.org}</p>
                   <p className="font-mono text-xs text-primary-500">{exp.period}</p>
                 </div>
                 <div>
-                  <h3 className="font-heading font-semibold text-dark-50 text-lg mb-1">{exp.title}</h3>
-                  <p className="font-mono text-xs text-primary-500 mb-5">{exp.dept}</p>
-                  <ul className="space-y-2 mb-5">
+                  <h3 className="font-heading font-semibold text-dark-50 text-base mb-0.5">{exp.title}</h3>
+                  <p className="font-mono text-xs text-primary-500 mb-3">{exp.dept}</p>
+                  <ul className="space-y-1.5 mb-3">
                     {exp.bullets.map((b, j) => (
-                      <li key={j} className="text-dark-300 text-sm leading-relaxed flex gap-3">
+                      <li key={j} className="text-dark-300 text-sm leading-relaxed flex gap-2">
                         <span className="text-primary-500 mt-2 shrink-0">—</span>
                         {b}
                       </li>
@@ -449,7 +460,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-dark-700">
             {CERTIFICATIONS.map(cert => (
-              <div key={cert.num} className="bg-dark-800 p-8 flex gap-6 items-start hover:bg-dark-700 transition-colors">
+              <div key={cert.num} className="bg-dark-800 p-5 flex gap-4 items-start hover:bg-dark-700 transition-colors">
                 <span className="font-mono text-xs text-primary-500 shrink-0 mt-1">{cert.num}</span>
                 <div>
                   <h3 className="font-heading font-semibold text-dark-100 text-sm mb-2 leading-snug">

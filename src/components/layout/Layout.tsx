@@ -33,8 +33,8 @@ function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-dark-900/95 backdrop-blur-sm border-b border-dark-700'
-          : 'bg-transparent'
+          ? 'bg-dark-900/75 backdrop-blur-xl border-b border-dark-700/80'
+          : 'bg-dark-900/20 backdrop-blur-md border-b border-dark-700/20'
       }`}
     >
       <nav className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -93,7 +93,7 @@ function Navbar() {
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden bg-dark-800 border-t border-dark-700 px-4 py-4">
+        <div className="md:hidden bg-dark-900/90 backdrop-blur-xl border-t border-dark-700/60 px-4 py-4">
           <ul className="flex flex-col gap-1">
             {NAV_LINKS.map(link => (
               <li key={link.href}>
