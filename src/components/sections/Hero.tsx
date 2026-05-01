@@ -178,7 +178,8 @@ export default function Hero() {
             {STATS.map(({ value, label }) => (
               <div
                 key={label}
-                className="bg-dark-800 border border-dark-700 p-4 text-center lg:text-left hover:border-primary-500/30 transition-colors"
+                className="bg-dark-800/50 backdrop-blur-md border border-dark-600/60 p-4 text-center lg:text-left hover:border-primary-500/30 transition-colors"
+                style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}
               >
                 <div className="font-heading text-2xl md:text-3xl font-bold text-gradient">{value}</div>
                 <div className="font-mono text-xs text-dark-400 tracking-wider uppercase mt-0.5">{label}</div>

@@ -289,7 +289,7 @@ export default function AboutPage() {
               {/* Stats */}
               <div className="grid grid-cols-2 gap-px bg-dark-700 mb-5">
                 {STATS.map(stat => (
-                  <div key={stat.label} className="bg-dark-800 p-4">
+                  <div key={stat.label} className="bg-dark-800/50 backdrop-blur-sm p-4" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}>
                     <div className="font-heading text-3xl font-bold text-gradient mb-0.5">{stat.value}</div>
                     <div className="font-mono text-xs text-dark-400 tracking-wider uppercase">{stat.label}</div>
                   </div>
@@ -388,7 +388,7 @@ export default function AboutPage() {
             {SKILLS.map(({ category, items }, i) => {
               const color = ['#00f0e6', '#a78bfa', '#60a5fa', '#4ade80'][i];
               return (
-                <div key={category} className="flex group hover:bg-dark-800/80 transition-colors">
+                <div key={category} className="flex group hover:bg-dark-800/50 backdrop-blur-sm transition-colors">
                   {/* Color accent bar */}
                   <div className="w-[3px] shrink-0" style={{ background: color, opacity: 0.7 }} />
                   {/* Content */}
@@ -493,7 +493,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-dark-700">
             {CERTIFICATIONS.map(cert => (
-              <div key={cert.num} className="bg-dark-800 p-5 flex gap-4 items-start hover:bg-dark-700 transition-colors">
+              <div key={cert.num} className="bg-dark-800/50 backdrop-blur-sm p-5 flex gap-4 items-start hover:bg-dark-800/80 transition-colors" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}>
                 <span className="font-mono text-xs text-primary-500 shrink-0 mt-1">{cert.num}</span>
                 <div>
                   <h3 className="font-heading font-semibold text-dark-100 text-sm mb-2 leading-snug">

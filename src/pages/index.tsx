@@ -185,7 +185,7 @@ function SkillsSection() {
             {/* Compact 2×2 skill chips */}
             <div className="grid grid-cols-2 gap-2">
               {SKILL_BARS.map(({ category, color, skills }) => (
-                <div key={category} className="bg-dark-800/80 border border-dark-700 p-3 hover:border-dark-600 transition-colors">
+                <div key={category} className="bg-dark-800/40 backdrop-blur-md border border-dark-600/50 p-3 hover:border-dark-600 transition-colors" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}>
                   <div className="flex items-center gap-1.5 mb-2 pb-1.5 border-b border-dark-700/60">
                     <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: color, boxShadow: `0 0 4px ${color}` }} />
                     <span className="font-heading font-semibold leading-tight" style={{ color, fontSize: '10px' }}>
@@ -219,7 +219,8 @@ function SkillsSection() {
                 <Link
                   key={id}
                   href="/services"
-                  className="flex items-center gap-4 p-4 bg-dark-800 border border-dark-700 hover:border-primary-500/30 group transition-all"
+                  className="flex items-center gap-4 p-4 bg-dark-800/45 backdrop-blur-md border border-dark-600/50 hover:border-primary-500/30 group transition-all"
+                  style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}
                 >
                   <div
                     className="w-11 h-11 flex items-center justify-center flex-shrink-0"
