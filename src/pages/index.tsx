@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import {
   ArrowRight, Github, ExternalLink, Star,
-  MessageSquare, Code, Cpu, Brain, Zap
+  MessageSquare, Code, Cpu, Brain, Zap, Printer, FileText
 } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/sections/Hero';
@@ -13,7 +13,34 @@ import { getAllProjects, type ProjectMeta } from '../lib/markdown';
 import { imgSrc } from '../lib/utils';
 import { GetStaticProps } from 'next';
 
-// ── Skills Section ─────────────────────────────────────────────────────
+// ── Skills + Services Section ──────────────────────────────────────────
+
+const SERVICES_PREVIEW = [
+  {
+    id: 'consultation',
+    icon: Cpu,
+    title: 'Konsultasi Teknik',
+    tagline: 'Robotics, AI, embedded — sesi 1-on-1',
+    price: 'mulai Rp 150.000 / sesi',
+    color: '#00f0e6',
+  },
+  {
+    id: '3d-printing',
+    icon: Printer,
+    title: '3D Printing',
+    tagline: 'Prototipe, enclosure, spare part custom',
+    price: 'mulai Rp 1.500 / gram',
+    color: '#60a5fa',
+  },
+  {
+    id: 'document-print',
+    icon: FileText,
+    title: 'Print Dokumen',
+    tagline: 'Skripsi, laporan, materi berkualitas',
+    price: 'mulai Rp 300 / lembar',
+    color: '#4ade80',
+  },
+];
 
 const SKILL_BARS = [
   {
@@ -69,20 +96,20 @@ function SkillsSection() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setAnimated(true); },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  const CX = 200, CY = 200;
-  const IR = 76,  IW = 42;   // inner ring: radius, stroke-width
-  const OR = 134, OW = 32;   // outer ring: radius, stroke-width
+  const CX = 150, CY = 150;
+  const IR = 54, IW = 30;
+  const OR = 92, OW = 24;
   const IC = 2 * Math.PI * IR;
   const OC = 2 * Math.PI * OR;
-  const CAT_GAP   = 5;    // deg gap between categories
-  const SKILL_GAP = 2.5;  // deg gap between skills within a category
-  const CAT_DEG   = 90;   // deg per category
+  const CAT_GAP   = 5;
+  const SKILL_GAP = 2.5;
+  const CAT_DEG   = 90;
   const SKILL_DEG = (CAT_DEG - CAT_GAP) / 4;
   const catLen    = ((CAT_DEG - CAT_GAP) / 360) * IC;
   const skillLen  = ((SKILL_DEG - SKILL_GAP) / 360) * OC;
@@ -90,111 +117,139 @@ function SkillsSection() {
   return (
     <section className="section" ref={sectionRef}>
       <div className="section-inner">
-        <div className="text-center mb-10">
-          <p className="section-label">Expertise</p>
-          <h2 className="section-title">
-            Technical <span className="text-gradient">Stack</span>
-          </h2>
-          <p className="section-subtitle mx-auto text-center">
-            Full-stack dari firmware hingga cloud, hardware hingga frontend.
-          </p>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-10">
-          {/* Sunburst donut chart */}
-          <div className="w-full max-w-[300px] flex-shrink-0">
-            <svg viewBox="0 0 400 400" className="w-full">
-              {/* Background tracks */}
-              <circle cx={CX} cy={CY} r={IR} fill="none" stroke="#ffffff07" strokeWidth={IW} />
-              <circle cx={CX} cy={CY} r={OR} fill="none" stroke="#ffffff04" strokeWidth={OW} />
+          {/* ── Left: Tech Stack ──────────────────────────────────── */}
+          <div>
+            <p className="section-label">Expertise</p>
+            <h2 className="section-title mb-1">
+              Technical <span className="text-gradient">Stack</span>
+            </h2>
+            <p className="text-dark-400 text-sm mb-7">
+              Full-stack dari firmware hingga cloud, hardware hingga frontend.
+            </p>
 
-              {/* Inner ring — categories */}
-              {SKILL_BARS.map((cat, ci) => {
-                const startDeg = ci * CAT_DEG + CAT_GAP / 2;
-                return (
-                  <circle
-                    key={`in-${ci}`}
-                    cx={CX} cy={CY} r={IR}
-                    fill="none"
-                    stroke={cat.color}
-                    strokeWidth={IW}
-                    transform={`rotate(${startDeg - 90}, ${CX}, ${CY})`}
-                    style={{
-                      strokeDasharray: animated
-                        ? `${catLen} ${IC - catLen}`
-                        : `0 ${IC}`,
-                      transition: `stroke-dasharray 900ms cubic-bezier(0.4,0,0.2,1) ${ci * 160}ms`,
-                      filter: `drop-shadow(0 0 7px ${cat.color}90)`,
-                    }}
-                    opacity={0.9}
-                  />
-                );
-              })}
+            {/* Sunburst chart */}
+            <div className="flex justify-center mb-6">
+              <div className="w-[230px]">
+                <svg viewBox="0 0 300 300" className="w-full">
+                  <circle cx={CX} cy={CY} r={IR} fill="none" stroke="#ffffff07" strokeWidth={IW} />
+                  <circle cx={CX} cy={CY} r={OR} fill="none" stroke="#ffffff04" strokeWidth={OW} />
 
-              {/* Outer ring — individual skills */}
-              {SKILL_BARS.flatMap((cat, ci) =>
-                cat.skills.map((_, si) => {
-                  const startDeg = ci * CAT_DEG + CAT_GAP / 2 + si * SKILL_DEG + SKILL_GAP / 2;
-                  const opacity  = 0.38 + (si / (cat.skills.length - 1)) * 0.58;
-                  return (
-                    <circle
-                      key={`out-${ci}-${si}`}
-                      cx={CX} cy={CY} r={OR}
-                      fill="none"
-                      stroke={cat.color}
-                      strokeWidth={OW}
-                      transform={`rotate(${startDeg - 90}, ${CX}, ${CY})`}
-                      style={{
-                        strokeDasharray: animated
-                          ? `${skillLen} ${OC - skillLen}`
-                          : `0 ${OC}`,
-                        transition: `stroke-dasharray 750ms cubic-bezier(0.4,0,0.2,1) ${350 + ci * 100 + si * 55}ms`,
-                        opacity,
-                        filter: `drop-shadow(0 0 5px ${cat.color}60)`,
-                      }}
-                    />
-                  );
-                })
-              )}
-
-              {/* Center label */}
-              <circle cx={CX} cy={CY} r={33} fill="#0d0d14" stroke="#00f0e615" strokeWidth={1} />
-              <text x={CX} y={CY - 5} textAnchor="middle" fontSize="7" fontFamily="monospace" fill="#00f0e668" letterSpacing="3">TECH</text>
-              <text x={CX} y={CY + 8} textAnchor="middle" fontSize="7" fontFamily="monospace" fill="#00f0e668" letterSpacing="3">STACK</text>
-            </svg>
-          </div>
-
-          {/* Skill legend */}
-          <div className="grid grid-cols-2 gap-3 w-full max-w-sm lg:flex-1">
-            {SKILL_BARS.map(({ category, icon: Icon, color, skills }) => (
-              <div key={category} className="card-glow p-4">
-                <div className="flex items-center gap-2 mb-3 pb-2 border-b border-dark-700">
-                  <div
-                    className="w-5 h-5 flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${color}20`, border: `1px solid ${color}50` }}
-                  >
-                    <Icon size={11} style={{ color }} />
-                  </div>
-                  <span className="font-heading font-semibold text-dark-100 leading-tight" style={{ fontSize: '10px' }}>
-                    {category}
-                  </span>
-                </div>
-                <ul className="space-y-1.5">
-                  {skills.map((skill, i) => (
-                    <li key={skill.name} className="flex items-center gap-2">
-                      <span
-                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                        style={{ background: color, opacity: 0.35 + i * 0.2 }}
+                  {SKILL_BARS.map((cat, ci) => {
+                    const startDeg = ci * CAT_DEG + CAT_GAP / 2;
+                    return (
+                      <circle
+                        key={`in-${ci}`}
+                        cx={CX} cy={CY} r={IR}
+                        fill="none" stroke={cat.color} strokeWidth={IW}
+                        transform={`rotate(${startDeg - 90}, ${CX}, ${CY})`}
+                        style={{
+                          strokeDasharray: animated ? `${catLen} ${IC - catLen}` : `0 ${IC}`,
+                          transition: `stroke-dasharray 900ms cubic-bezier(0.4,0,0.2,1) ${ci * 160}ms`,
+                          filter: `drop-shadow(0 0 6px ${cat.color}90)`,
+                        }}
+                        opacity={0.9}
                       />
-                      <span className="font-mono text-dark-400 leading-none" style={{ fontSize: '9.5px' }}>
-                        {skill.name}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                    );
+                  })}
+
+                  {SKILL_BARS.flatMap((cat, ci) =>
+                    cat.skills.map((_, si) => {
+                      const startDeg = ci * CAT_DEG + CAT_GAP / 2 + si * SKILL_DEG + SKILL_GAP / 2;
+                      const opacity  = 0.38 + (si / (cat.skills.length - 1)) * 0.58;
+                      return (
+                        <circle
+                          key={`out-${ci}-${si}`}
+                          cx={CX} cy={CY} r={OR}
+                          fill="none" stroke={cat.color} strokeWidth={OW}
+                          transform={`rotate(${startDeg - 90}, ${CX}, ${CY})`}
+                          style={{
+                            strokeDasharray: animated ? `${skillLen} ${OC - skillLen}` : `0 ${OC}`,
+                            transition: `stroke-dasharray 750ms cubic-bezier(0.4,0,0.2,1) ${350 + ci * 100 + si * 55}ms`,
+                            opacity,
+                            filter: `drop-shadow(0 0 4px ${cat.color}60)`,
+                          }}
+                        />
+                      );
+                    })
+                  )}
+
+                  <circle cx={CX} cy={CY} r={24} fill="#0d0d14" stroke="#00f0e615" strokeWidth={1} />
+                  <text x={CX} y={CY - 3} textAnchor="middle" fontSize="6" fontFamily="monospace" fill="#00f0e668" letterSpacing="2">TECH</text>
+                  <text x={CX} y={CY + 7} textAnchor="middle" fontSize="6" fontFamily="monospace" fill="#00f0e668" letterSpacing="2">STACK</text>
+                </svg>
               </div>
-            ))}
+            </div>
+
+            {/* Compact 2×2 skill chips */}
+            <div className="grid grid-cols-2 gap-2">
+              {SKILL_BARS.map(({ category, color, skills }) => (
+                <div key={category} className="bg-dark-800/80 border border-dark-700 p-3 hover:border-dark-600 transition-colors">
+                  <div className="flex items-center gap-1.5 mb-2 pb-1.5 border-b border-dark-700/60">
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: color, boxShadow: `0 0 4px ${color}` }} />
+                    <span className="font-heading font-semibold leading-tight" style={{ color, fontSize: '10px' }}>
+                      {category}
+                    </span>
+                  </div>
+                  <ul className="space-y-1">
+                    {skills.slice(0, 3).map(s => (
+                      <li key={s.name} className="font-mono text-dark-500 leading-tight" style={{ fontSize: '9px' }}>
+                        {s.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* ── Right: Services Hook ───────────────────────────────── */}
+          <div>
+            <p className="section-label">Services</p>
+            <h2 className="section-title mb-1">
+              Apa yang Saya <span className="text-gradient">Tawarkan</span>
+            </h2>
+            <p className="text-dark-400 text-sm mb-7">
+              Butuh bantuan teknis, prototipe, atau cetak? Saya siap membantu.
+            </p>
+
+            <div className="space-y-3 mb-5">
+              {SERVICES_PREVIEW.map(({ id, icon: Icon, title, tagline, price, color }) => (
+                <Link
+                  key={id}
+                  href="/services"
+                  className="flex items-center gap-4 p-4 bg-dark-800 border border-dark-700 hover:border-primary-500/30 group transition-all"
+                >
+                  <div
+                    className="w-11 h-11 flex items-center justify-center flex-shrink-0"
+                    style={{ background: `${color}18`, border: `1px solid ${color}40` }}
+                  >
+                    <Icon size={20} style={{ color }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-heading font-semibold text-dark-100 text-sm">{title}</span>
+                      <ArrowRight size={13} className="text-dark-600 group-hover:text-primary-500 transition-colors flex-shrink-0" />
+                    </div>
+                    <p className="text-dark-400 text-xs mt-0.5 leading-relaxed">{tagline}</p>
+                    <span className="font-mono mt-1.5 block" style={{ color, fontSize: '10px' }}>{price}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <Link href="/services" className="btn-primary text-sm w-full flex justify-center items-center gap-2">
+              Lihat Semua Service <ArrowRight size={14} />
+            </Link>
+
+            <div className="mt-4 flex items-center justify-center gap-3 text-dark-500 font-mono" style={{ fontSize: '10px' }}>
+              <span>✦ Konsultasi pertama gratis</span>
+              <span className="text-dark-700">·</span>
+              <span>Response &lt; 2 jam</span>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
