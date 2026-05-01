@@ -69,11 +69,23 @@ function SkillsSection() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setAnimated(true); },
-      { threshold: 0.15 }
+      { threshold: 0.2 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
+
+  const CX = 200, CY = 200;
+  const IR = 76,  IW = 42;   // inner ring: radius, stroke-width
+  const OR = 134, OW = 32;   // outer ring: radius, stroke-width
+  const IC = 2 * Math.PI * IR;
+  const OC = 2 * Math.PI * OR;
+  const CAT_GAP   = 5;    // deg gap between categories
+  const SKILL_GAP = 2.5;  // deg gap between skills within a category
+  const CAT_DEG   = 90;   // deg per category
+  const SKILL_DEG = (CAT_DEG - CAT_GAP) / 4;
+  const catLen    = ((CAT_DEG - CAT_GAP) / 360) * IC;
+  const skillLen  = ((SKILL_DEG - SKILL_GAP) / 360) * OC;
 
   return (
     <section className="section" ref={sectionRef}>
@@ -88,48 +100,101 @@ function SkillsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {SKILL_BARS.map(({ category, icon: Icon, color, skills }) => (
-            <div key={category} className="card-glow">
-              {/* Header */}
-              <div className="flex items-center gap-3 mb-5 pb-4 border-b border-dark-700">
-                <div
-                  className="w-8 h-8 flex items-center justify-center border"
-                  style={{ borderColor: color + '50', backgroundColor: color + '18' }}
-                >
-                  <Icon size={15} style={{ color }} />
-                </div>
-                <h3 className="font-heading font-semibold text-dark-50 text-sm">{category}</h3>
-              </div>
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-10">
+          {/* Sunburst donut chart */}
+          <div className="w-full max-w-[300px] flex-shrink-0">
+            <svg viewBox="0 0 400 400" className="w-full">
+              {/* Background tracks */}
+              <circle cx={CX} cy={CY} r={IR} fill="none" stroke="#ffffff07" strokeWidth={IW} />
+              <circle cx={CX} cy={CY} r={OR} fill="none" stroke="#ffffff04" strokeWidth={OW} />
 
-              {/* Skill bars */}
-              <div className="space-y-4">
-                {skills.map((skill, idx) => (
-                  <div key={skill.name}>
-                    <div className="flex justify-between items-center mb-1.5">
-                      <span className="text-xs font-mono text-dark-300">{skill.name}</span>
-                      <span className="text-xs font-mono font-semibold" style={{ color }}>
-                        {skill.level}%
-                      </span>
-                    </div>
-                    {/* Track */}
-                    <div className="h-1 bg-dark-700 w-full overflow-hidden">
-                      <div
-                        className="h-full transition-all ease-out"
-                        style={{
-                          width: animated ? `${skill.level}%` : '0%',
-                          backgroundColor: color,
-                          boxShadow: animated ? `0 0 6px ${color}80` : 'none',
-                          transitionDuration: '900ms',
-                          transitionDelay: `${idx * 120}ms`,
-                        }}
-                      />
-                    </div>
+              {/* Inner ring — categories */}
+              {SKILL_BARS.map((cat, ci) => {
+                const startDeg = ci * CAT_DEG + CAT_GAP / 2;
+                return (
+                  <circle
+                    key={`in-${ci}`}
+                    cx={CX} cy={CY} r={IR}
+                    fill="none"
+                    stroke={cat.color}
+                    strokeWidth={IW}
+                    transform={`rotate(${startDeg - 90}, ${CX}, ${CY})`}
+                    style={{
+                      strokeDasharray: animated
+                        ? `${catLen} ${IC - catLen}`
+                        : `0 ${IC}`,
+                      transition: `stroke-dasharray 900ms cubic-bezier(0.4,0,0.2,1) ${ci * 160}ms`,
+                      filter: `drop-shadow(0 0 7px ${cat.color}90)`,
+                    }}
+                    opacity={0.9}
+                  />
+                );
+              })}
+
+              {/* Outer ring — individual skills */}
+              {SKILL_BARS.flatMap((cat, ci) =>
+                cat.skills.map((_, si) => {
+                  const startDeg = ci * CAT_DEG + CAT_GAP / 2 + si * SKILL_DEG + SKILL_GAP / 2;
+                  const opacity  = 0.38 + (si / (cat.skills.length - 1)) * 0.58;
+                  return (
+                    <circle
+                      key={`out-${ci}-${si}`}
+                      cx={CX} cy={CY} r={OR}
+                      fill="none"
+                      stroke={cat.color}
+                      strokeWidth={OW}
+                      transform={`rotate(${startDeg - 90}, ${CX}, ${CY})`}
+                      style={{
+                        strokeDasharray: animated
+                          ? `${skillLen} ${OC - skillLen}`
+                          : `0 ${OC}`,
+                        transition: `stroke-dasharray 750ms cubic-bezier(0.4,0,0.2,1) ${350 + ci * 100 + si * 55}ms`,
+                        opacity,
+                        filter: `drop-shadow(0 0 5px ${cat.color}60)`,
+                      }}
+                    />
+                  );
+                })
+              )}
+
+              {/* Center label */}
+              <circle cx={CX} cy={CY} r={33} fill="#0d0d14" stroke="#00f0e615" strokeWidth={1} />
+              <text x={CX} y={CY - 5} textAnchor="middle" fontSize="7" fontFamily="monospace" fill="#00f0e668" letterSpacing="3">TECH</text>
+              <text x={CX} y={CY + 8} textAnchor="middle" fontSize="7" fontFamily="monospace" fill="#00f0e668" letterSpacing="3">STACK</text>
+            </svg>
+          </div>
+
+          {/* Skill legend */}
+          <div className="grid grid-cols-2 gap-3 w-full max-w-sm lg:flex-1">
+            {SKILL_BARS.map(({ category, icon: Icon, color, skills }) => (
+              <div key={category} className="card-glow p-4">
+                <div className="flex items-center gap-2 mb-3 pb-2 border-b border-dark-700">
+                  <div
+                    className="w-5 h-5 flex items-center justify-center flex-shrink-0"
+                    style={{ background: `${color}20`, border: `1px solid ${color}50` }}
+                  >
+                    <Icon size={11} style={{ color }} />
                   </div>
-                ))}
+                  <span className="font-heading font-semibold text-dark-100 leading-tight" style={{ fontSize: '10px' }}>
+                    {category}
+                  </span>
+                </div>
+                <ul className="space-y-1.5">
+                  {skills.map((skill, i) => (
+                    <li key={skill.name} className="flex items-center gap-2">
+                      <span
+                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                        style={{ background: color, opacity: 0.35 + i * 0.2 }}
+                      />
+                      <span className="font-mono text-dark-400 leading-none" style={{ fontSize: '9.5px' }}>
+                        {skill.name}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
