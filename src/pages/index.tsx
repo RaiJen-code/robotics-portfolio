@@ -1,9 +1,10 @@
 // src/pages/index.tsx
+import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { 
-  ArrowRight, Github, ExternalLink, Star, 
-  MessageSquare, Code, Cpu, Brain, Wrench, Zap
+import {
+  ArrowRight, Github, ExternalLink, Star,
+  MessageSquare, Code, Cpu, Brain, Zap
 } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/sections/Hero';
@@ -14,34 +15,70 @@ import { GetStaticProps } from 'next';
 
 // ── Skills Section ─────────────────────────────────────────────────────
 
-const SKILL_GROUPS = [
+const SKILL_BARS = [
   {
-    category: 'Robotics & Hardware',
+    category: 'Robotics & Embedded',
     icon: Cpu,
-    skills: ['ROS / ROS2', 'Arduino', 'ESP32 / ESP8266', 'STM32', 'Raspberry Pi', 'Servo Control', 'PID Controller', 'Sensor Fusion'],
+    color: '#00f0e6',
+    skills: [
+      { name: 'Arduino / ESP32 / STM32', level: 95 },
+      { name: 'ROS / ROS2', level: 85 },
+      { name: 'Jetson Nano / CUDA', level: 80 },
+      { name: 'PID Control / Sensor Fusion', level: 78 },
+    ],
   },
   {
     category: 'AI & Machine Learning',
     icon: Brain,
-    skills: ['Python', 'TensorFlow / Keras', 'OpenCV', 'YOLO', 'Edge AI', 'Scikit-learn', 'Jupyter', 'MediaPipe'],
+    color: '#a78bfa',
+    skills: [
+      { name: 'Python / TensorFlow / Keras', level: 90 },
+      { name: 'OpenCV / MediaPipe', level: 88 },
+      { name: 'YOLO / Object Detection', level: 82 },
+      { name: 'Edge AI / TFLite', level: 78 },
+    ],
   },
   {
-    category: 'Software & Tools',
+    category: 'IoT & Big Data',
+    icon: Zap,
+    color: '#60a5fa',
+    skills: [
+      { name: 'MQTT / Blynk API', level: 90 },
+      { name: 'Docker / Kafka / Spark', level: 82 },
+      { name: 'Laravel / MySQL', level: 78 },
+      { name: 'Modbus / RS485', level: 75 },
+    ],
+  },
+  {
+    category: 'Software & Design',
     icon: Code,
-    skills: ['C/C++', 'JavaScript/TS', 'Next.js', 'React', 'Node.js', 'MQTT', 'Docker', 'Git'],
-  },
-  {
-    category: 'Mechanical Design',
-    icon: Wrench,
-    skills: ['Fusion 360', 'SolidWorks', 'FreeCAD', '3D Printing', 'PCB Design (KiCad)', 'Laser Cut', 'CNC Basic'],
+    color: '#4ade80',
+    skills: [
+      { name: 'C / C++', level: 88 },
+      { name: 'JavaScript / TypeScript', level: 80 },
+      { name: '3D CAD / Printing', level: 85 },
+      { name: 'PCB Design / KiCad', level: 72 },
+    ],
   },
 ];
 
 function SkillsSection() {
+  const [animated, setAnimated] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setAnimated(true); },
+      { threshold: 0.15 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="section">
+    <section className="section" ref={sectionRef}>
       <div className="section-inner">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10">
           <p className="section-label">Expertise</p>
           <h2 className="section-title">
             Technical <span className="text-gradient">Stack</span>
@@ -52,17 +89,43 @@ function SkillsSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {SKILL_GROUPS.map(({ category, icon: Icon, skills }) => (
+          {SKILL_BARS.map(({ category, icon: Icon, color, skills }) => (
             <div key={category} className="card-glow">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 bg-primary-500/10 border border-primary-500/30 flex items-center justify-center">
-                  <Icon size={18} className="text-primary-500" />
+              {/* Header */}
+              <div className="flex items-center gap-3 mb-5 pb-4 border-b border-dark-700">
+                <div
+                  className="w-8 h-8 flex items-center justify-center border"
+                  style={{ borderColor: color + '50', backgroundColor: color + '18' }}
+                >
+                  <Icon size={15} style={{ color }} />
                 </div>
-                <h3 className="font-heading font-semibold text-dark-50">{category}</h3>
+                <h3 className="font-heading font-semibold text-dark-50 text-sm">{category}</h3>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {skills.map(skill => (
-                  <span key={skill} className="skill-badge">{skill}</span>
+
+              {/* Skill bars */}
+              <div className="space-y-4">
+                {skills.map((skill, idx) => (
+                  <div key={skill.name}>
+                    <div className="flex justify-between items-center mb-1.5">
+                      <span className="text-xs font-mono text-dark-300">{skill.name}</span>
+                      <span className="text-xs font-mono font-semibold" style={{ color }}>
+                        {skill.level}%
+                      </span>
+                    </div>
+                    {/* Track */}
+                    <div className="h-1 bg-dark-700 w-full overflow-hidden">
+                      <div
+                        className="h-full transition-all ease-out"
+                        style={{
+                          width: animated ? `${skill.level}%` : '0%',
+                          backgroundColor: color,
+                          boxShadow: animated ? `0 0 6px ${color}80` : 'none',
+                          transitionDuration: '900ms',
+                          transitionDelay: `${idx * 120}ms`,
+                        }}
+                      />
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
