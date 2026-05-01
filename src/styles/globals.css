@@ -28,7 +28,7 @@
   }
 
   body {
-    background: linear-gradient(155deg, #040f22 0%, #030712 38%, #030712 72%, #07031a 100%);
+    background: linear-gradient(155deg, #0a1f3d 0%, #080f20 38%, #07101e 72%, #100628 100%);
     color: var(--text-primary);
     font-family: 'DM Sans', sans-serif;
     overflow-x: hidden;

@@ -234,21 +234,21 @@ export default function Layout({ children, showChat = true }: LayoutProps) {
         <div style={{
           position: 'absolute', top: '-10%', left: '-5%',
           width: 600, height: 600, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,240,230,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(0,240,230,0.16) 0%, transparent 70%)',
           filter: 'blur(80px)',
           animation: 'orbFloat 32s ease-in-out infinite',
         }} />
         <div style={{
           position: 'absolute', top: '5%', right: '-8%',
           width: 500, height: 500, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(167,139,250,0.07) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(167,139,250,0.14) 0%, transparent 70%)',
           filter: 'blur(70px)',
           animation: 'orbFloat 40s ease-in-out infinite reverse',
         }} />
         <div style={{
           position: 'absolute', bottom: '10%', left: '30%',
           width: 700, height: 700, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(96,165,250,0.05) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(96,165,250,0.11) 0%, transparent 70%)',
           filter: 'blur(90px)',
           animation: 'orbFloat 48s ease-in-out infinite',
         }} />
