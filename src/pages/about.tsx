@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Download, Mail, Github, Instagram, Phone, MapPin, GraduationCap, Award, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Download, Mail, Phone, MapPin, GraduationCap, ExternalLink, ChevronLeft, ChevronRight, Github, Instagram } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import { imgSrc } from '../lib/utils';
 
@@ -326,7 +326,7 @@ export default function AboutPage() {
                     { icon: Instagram, label: 'Instagram', value: '@rangga.vibes', href: 'https://instagram.com/rangga.vibes' },
                     { icon: Github, label: 'GitHub', value: 'github.com/RaiJen-code', href: 'https://github.com/RaiJen-code' },
                     { icon: GraduationCap, label: 'Degree', value: 'B.Eng Electrical Engineering, IT-PLN (2021–2025)' },
-                  ].map(({ label, value, href, icon: Icon }) => (
+                  ].map(({ label, value, href }) => (
                     <div key={label} className="flex gap-3 border-b border-dark-700/60 pb-2 last:border-0 last:pb-0">
                       <span className="font-mono text-[10px] text-dark-500 tracking-widest uppercase w-20 pt-0.5 shrink-0">
                         {label}
@@ -384,21 +384,35 @@ export default function AboutPage() {
             Skills & <span className="text-gradient">Expertise</span>
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-dark-700">
-            {SKILLS.map(group => (
-              <div key={group.category} className="bg-dark-800 p-5">
-                <h3 className="font-mono text-xs text-primary-500 tracking-widest uppercase mb-4 pb-3 border-b border-dark-700">
-                  {group.category}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {group.items.map(skill => (
-                    <span key={skill} className="skill-badge">
-                      {skill}
+          <div className="border border-dark-700 divide-y divide-dark-700/60">
+            {SKILLS.map(({ category, items }, i) => {
+              const color = ['#00f0e6', '#a78bfa', '#60a5fa', '#4ade80'][i];
+              return (
+                <div key={category} className="flex group hover:bg-dark-800/80 transition-colors">
+                  {/* Color accent bar */}
+                  <div className="w-[3px] shrink-0" style={{ background: color, opacity: 0.7 }} />
+                  {/* Content */}
+                  <div className="flex-1 py-4 px-5 flex flex-col sm:flex-row sm:items-start gap-3">
+                    <span
+                      className="sm:w-44 shrink-0 font-mono text-[10px] uppercase tracking-widest pt-0.5 font-semibold"
+                      style={{ color }}
+                    >
+                      {category}
                     </span>
-                  ))}
+                    <div className="flex flex-wrap gap-1.5">
+                      {items.map(skill => (
+                        <span
+                          key={skill}
+                          className="px-2 py-0.5 text-[11px] font-mono text-dark-300 bg-dark-900/60 border border-dark-700/80 hover:border-dark-500 hover:text-dark-100 transition-colors cursor-default"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -413,37 +427,56 @@ export default function AboutPage() {
             Work <span className="text-gradient">Experience</span>
           </h2>
 
-          <div className="space-y-0">
-            {EXPERIENCE.map((exp, i) => (
-              <div
-                key={i}
-                className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-4 md:gap-8 py-6 border-b border-dark-700 first:border-t"
-              >
-                <div>
-                  <p className="font-mono text-xs text-dark-400 tracking-wider mb-1">{exp.org}</p>
-                  <p className="font-mono text-xs text-primary-500">{exp.period}</p>
-                </div>
-                <div>
-                  <h3 className="font-heading font-semibold text-dark-50 text-base mb-0.5">{exp.title}</h3>
-                  <p className="font-mono text-xs text-primary-500 mb-3">{exp.dept}</p>
-                  <ul className="space-y-1.5 mb-3">
+          {/* Timeline */}
+          <div className="relative pl-4">
+            {/* Vertical line */}
+            <div className="absolute left-0 top-1 bottom-1 w-px bg-dark-700" />
+
+            <div className="space-y-0">
+              {EXPERIENCE.map((exp, i) => (
+                <div key={i} className="relative pb-6 last:pb-0 group">
+                  {/* Timeline dot */}
+                  <div className="absolute -left-4 top-1.5 w-2 h-2 border border-primary-500/40 bg-dark-900 group-hover:bg-primary-500/20 group-hover:border-primary-500 transition-all -translate-x-[3px]" />
+
+                  {/* Header */}
+                  <div className="flex items-start justify-between gap-4 mb-0.5">
+                    <h3 className="font-heading font-semibold text-dark-50 text-sm leading-tight">{exp.title}</h3>
+                    <span className="font-mono text-[10px] text-primary-500 shrink-0 mt-0.5 whitespace-nowrap">{exp.period}</span>
+                  </div>
+
+                  {/* Org · Dept */}
+                  <p className="font-mono text-xs text-dark-400 mb-2.5">
+                    {exp.org}
+                    <span className="text-dark-600 mx-1">·</span>
+                    <span className="text-dark-500">{exp.dept}</span>
+                  </p>
+
+                  {/* Bullets */}
+                  <ul className="space-y-1 mb-2.5">
                     {exp.bullets.map((b, j) => (
-                      <li key={j} className="text-dark-300 text-sm leading-relaxed flex gap-2">
-                        <span className="text-primary-500 mt-2 shrink-0">—</span>
+                      <li key={j} className="text-dark-400 text-xs leading-relaxed flex gap-2">
+                        <span className="text-primary-500/40 shrink-0 mt-0.5">▸</span>
                         {b}
                       </li>
                     ))}
                   </ul>
-                  <div className="flex flex-wrap gap-2">
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-1.5">
                     {exp.tags.map(tag => (
-                      <span key={tag} className="px-2 py-1 text-xs font-mono border border-dark-600 text-dark-400">
+                      <span key={tag} className="px-2 py-0.5 text-[10px] font-mono border border-dark-700 text-dark-500 bg-dark-800/40 hover:text-dark-300 hover:border-dark-600 transition-colors">
                         {tag}
                       </span>
                     ))}
                   </div>
+
+                  {/* Separator */}
+                  {i < EXPERIENCE.length - 1 && (
+                    <div className="mt-6 border-b border-dark-700/40" />
+                  )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
