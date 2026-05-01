@@ -28,7 +28,7 @@
   }
 
   body {
-    background-color: var(--bg-primary);
+    background: linear-gradient(155deg, #040f22 0%, #030712 38%, #030712 72%, #07031a 100%);
     color: var(--text-primary);
     font-family: 'DM Sans', sans-serif;
     overflow-x: hidden;
@@ -172,6 +172,12 @@
   .category-pill:not(.active) {
     @apply border-dark-600 text-dark-200 hover:border-primary-500/50 hover:text-primary-500;
   }
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(30px, -20px) scale(1.05); }
+  66%       { transform: translate(-20px, 15px) scale(0.97); }
 }
 
 @layer utilities {
