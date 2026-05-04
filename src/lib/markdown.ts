@@ -21,8 +21,6 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import remarkGfm from 'remark-gfm';
-import { visit } from 'unist-util-visit';
-
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 // ── Types ─────────────────────────────────────────────────────────────
@@ -72,11 +70,13 @@ const PROJECTS_DIR = path.join(process.cwd(), 'content', 'projects');
 
 function fixImagePaths() {
   return (tree: any) => {
-    visit(tree, 'image', (node: any) => {
-      if (node.url && node.url.startsWith('/') && BASE_PATH && !node.url.startsWith(BASE_PATH)) {
+    function walk(node: any) {
+      if (node.type === 'image' && node.url && node.url.startsWith('/') && BASE_PATH && !node.url.startsWith(BASE_PATH)) {
         node.url = BASE_PATH + node.url;
       }
-    });
+      if (node.children) node.children.forEach(walk);
+    }
+    walk(tree);
   };
 }
 
