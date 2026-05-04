@@ -5,11 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <title>aRJey · Admin</title>
-  <style>
-    body { margin: 0; font-family: sans-serif; }
-  </style>
 </head>
 <body>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+  CMS.init({
+    config: {
+      backend: {
+        name: 'github',
+        repo: 'RaiJen-code/robotics-portfolio',
+        branch: 'main',
+        auth_type: 'pkce',
+        app_id: 'Ov23li0aStdG9dG9Tgmz',
+      },
+      media_folder: 'public/images/posts',
+      public_folder: '/images/posts',
+      locale: 'id',
+      collections: [
+        {
+          name: 'posts',
+          label: 'Blog Post',
+          label_singular: 'Blog Post',
+          folder: 'content/posts',
+          create: true,
+          delete: false,
+          slug: '{{slug}}',
+          summary: '{{title}} — {{date}}',
+          fields: [
+            { label: 'Judul Artikel', name: 'title', widget: 'string', hint: 'Judul yang muncul di halaman blog.' },
+            { label: 'Ringkasan', name: 'excerpt', widget: 'string', hint: '1-2 kalimat singkat. Muncul di card blog.' },
+            { label: 'Tanggal Publish', name: 'date', widget: 'datetime', format: 'YYYY-MM-DD', date_format: 'DD MMMM YYYY', time_format: false, default: '' },
+            { label: 'Kategori', name: 'category', widget: 'select', options: ['Robotics', 'AI', 'Computer Vision', 'IoT', 'Embedded Systems', '3D Design', 'Software', 'General'], default: 'General' },
+            { label: 'Tags', name: 'tags', widget: 'list', default: [], hint: 'Teknologi atau topik relevan.' },
+            { label: 'Cover Image', name: 'coverImage', widget: 'image', required: false, hint: 'Opsional. Rasio 16:9. JPG/PNG maks 5MB.' },
+            { label: 'Publish?', name: 'published', widget: 'boolean', default: true, hint: 'Draft = tidak muncul. Publish = langsung live.' },
+            { label: 'Konten Artikel', name: 'body', widget: 'markdown' },
+          ],
+        },
+        {
+          name: 'projects',
+          label: 'Portfolio Project',
+          label_singular: 'Portfolio Project',
+          folder: 'content/projects',
+          create: true,
+          delete: false,
+          slug: '{{slug}}',
+          summary: '{{title}} — {{category}}',
+          fields: [
+            { label: 'Judul Project', name: 'title', widget: 'string' },
+            { label: 'Ringkasan', name: 'excerpt', widget: 'string', hint: '1-2 kalimat deskripsi singkat.' },
+            { label: 'Tanggal', name: 'date', widget: 'datetime', format: 'YYYY-MM-DD', date_format: 'DD MMMM YYYY', time_format: false },
+            { label: 'Kategori', name: 'category', widget: 'select', options: ['Robotics', 'AI', 'IoT', 'Mechanical Design', 'Embedded'] },
+            { label: 'Tags', name: 'tags', widget: 'list', default: [] },
+            { label: 'Tech Stack', name: 'tech', widget: 'list', default: [], hint: 'Teknologi yang dipakai. Contoh: ROS2, Python, ESP32.' },
+            { label: 'Cover Image', name: 'coverImage', widget: 'image', required: false },
+            {
+              label: 'Status', name: 'status', widget: 'select',
+              options: [
+                { label: 'Selesai', value: 'completed' },
+                { label: 'Sedang Berjalan', value: 'ongoing' },
+                { label: 'Arsip', value: 'archived' },
+              ],
+              default: 'completed',
+            },
+            { label: 'Featured (tampil di Home)', name: 'featured', widget: 'boolean', default: false },
+            { label: 'GitHub URL', name: 'githubUrl', widget: 'string', required: false },
+            { label: 'Demo URL', name: 'demoUrl', widget: 'string', required: false },
+            { label: 'Deskripsi Lengkap', name: 'body', widget: 'markdown' },
+          ],
+        },
+      ],
+    },
+  });
+  </script>
 </body>
 </html>
