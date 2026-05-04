@@ -2,9 +2,7 @@ backend:
   name: github
   repo: RaiJen-code/robotics-portfolio
   branch: main
-  base_url: https://api.netlify.com
-  auth_endpoint: auth
-  site_domain: arjey.netlify.app
+  base_url: https://arjey-cms-auth.razetya100.workers.dev
 
 media_folder: public/images/posts
 public_folder: /images/posts
