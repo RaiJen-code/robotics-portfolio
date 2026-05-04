@@ -6,6 +6,7 @@ import { ArrowLeft, Github, ExternalLink, Calendar, Tag, Cpu, CheckCircle, Clock
 import Layout from '../../components/layout/Layout';
 import { getProjectBySlug, getAllProjectSlugs, type Project } from '../../lib/markdown';
 import { imgSrc } from '../../lib/utils';
+import { useCodeHighlight } from '../../hooks/useCodeHighlight';
 
 interface Props {
   project: Project;
@@ -18,6 +19,7 @@ const STATUS_CONFIG = {
 };
 
 export default function ProjectCaseStudy({ project }: Props) {
+  useCodeHighlight();
   const statusCfg = STATUS_CONFIG[project.status];
   const StatusIcon = statusCfg.icon;
 

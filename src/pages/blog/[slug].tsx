@@ -8,6 +8,7 @@ import { ArrowLeft, Clock, Tag, Share2, Play } from 'lucide-react';
 import Layout from '../../components/layout/Layout';
 import { getPostBySlug, getAllPostSlugs, type Post } from '../../lib/markdown';
 import { imgSrc } from '../../lib/utils';
+import { useCodeHighlight } from '../../hooks/useCodeHighlight';
 
 interface Props {
   post: Post;
@@ -22,6 +23,8 @@ function toEmbedUrl(url: string): string | null {
 }
 
 export default function BlogPost({ post }: Props) {
+  useCodeHighlight();
+
   function handleShare() {
     if (navigator.share) {
       navigator.share({
