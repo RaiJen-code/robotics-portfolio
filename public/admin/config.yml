@@ -6,7 +6,7 @@ backend:
   repo: RaiJen-code/robotics-portfolio
   branch: main
   auth_type: pkce
-  app_id: GANTI_DENGAN_CLIENT_ID
+  app_id: Ov23li0aStdG9dG9Tgmz
 
 # Folder penyimpanan gambar yang diupload via CMS
 media_folder: public/images/posts
