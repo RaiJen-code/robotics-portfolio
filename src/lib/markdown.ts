@@ -21,6 +21,9 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import remarkGfm from 'remark-gfm';
+import { visit } from 'unist-util-visit';
+
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 // ── Types ─────────────────────────────────────────────────────────────
 
@@ -67,9 +70,20 @@ const PROJECTS_DIR = path.join(process.cwd(), 'content', 'projects');
 
 // ── Markdown Renderer ─────────────────────────────────────────────────
 
+function fixImagePaths() {
+  return (tree: any) => {
+    visit(tree, 'image', (node: any) => {
+      if (node.url && node.url.startsWith('/') && BASE_PATH && !node.url.startsWith(BASE_PATH)) {
+        node.url = BASE_PATH + node.url;
+      }
+    });
+  };
+}
+
 async function markdownToHtml(markdown: string): Promise<string> {
   const result = await remark()
-    .use(remarkGfm)          // GitHub Flavored Markdown (tables, strikethrough, dll)
+    .use(remarkGfm)
+    .use(fixImagePaths)
     .use(remarkHtml, { sanitize: false })
     .process(markdown);
   return result.toString();
