@@ -1,10 +1,15 @@
 ---
-title: "Membangun Robot Arm 6-DOF dengan ROS2 dan Raspberry Pi"
-date: "2024-02-10"
-excerpt: "Tutorial lengkap implementasi inverse kinematics dan kontrol servo untuk robot arm 6 derajat kebebasan menggunakan ROS2 Humble dan Raspberry Pi 4."
-tags: ["ROS2", "Robotics", "Python", "Raspberry Pi", "Servo"]
-category: "Robotics"
-coverImage: "/images/posts/robot-arm.jpg"
+title: Membangun Robot Arm 6-DOF dengan ROS2 dan Raspberry Pi
+excerpt: Tutorial lengkap implementasi inverse kinematics dan kontrol servo untuk robot arm 6 derajat kebebasan menggunakan ROS2 Humble dan Raspberry Pi 4.
+date: 2024-02-10
+category: Robotics
+tags:
+  - ROS2
+  - Robotics
+  - Python
+  - Raspberry Pi
+  - Servo
+coverImage: /images/posts/technology business personal growth.jpg
 published: true
 ---
 
@@ -13,6 +18,7 @@ published: true
 Robot arm 6-DOF (Degree of Freedom) adalah salah satu platform robotik paling versatile. Dengan 6 joint, robot ini mampu mencapai hampir semua orientasi dalam ruang 3D.
 
 Dalam artikel ini, saya akan membahas implementasi lengkap menggunakan:
+
 - **ROS2 Humble** sebagai middleware robotik
 - **Raspberry Pi 4** sebagai controller utama
 - **Servo MG996R** untuk aktuasi setiap joint
@@ -21,6 +27,7 @@ Dalam artikel ini, saya akan membahas implementasi lengkap menggunakan:
 ## Prerequisites
 
 Sebelum mulai, pastikan kamu memiliki:
+
 - Raspberry Pi 4 (minimal 4GB RAM)
 - Ubuntu 22.04 Server terinstall
 - ROS2 Humble terinstall
@@ -158,6 +165,7 @@ ros2 topic pub /joint_commands sensor_msgs/msg/JointState \
 ## Hasil
 
 Dengan setup ini, robot arm mampu:
+
 - Precision picking ±2mm dalam radius 300mm
 - Kecepatan max 60°/detik per joint
 - Payload max 200g di end-effector
