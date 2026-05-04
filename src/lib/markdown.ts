@@ -33,6 +33,7 @@ export interface PostMeta {
   tags: string[];
   category: string;
   coverImage?: string;
+  videoUrl?: string;
   readTime?: number;
   published: boolean;
 }
@@ -134,6 +135,7 @@ export function getAllPosts(options?: {
         tags: data.tags || [],
         category: data.category || 'General',
         coverImage: data.coverImage ?? null,
+        videoUrl: data.videoUrl ?? null,
         readTime: calculateReadTime(content),
         published: data.published !== false,
       } as PostMeta;
@@ -177,6 +179,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     tags: data.tags || [],
     category: data.category || 'General',
     coverImage: data.coverImage ?? null,
+    videoUrl: data.videoUrl ?? null,
     readTime: calculateReadTime(content),
     published: data.published !== false,
     content: htmlContent,

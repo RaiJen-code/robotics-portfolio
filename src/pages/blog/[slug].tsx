@@ -4,13 +4,21 @@ import Link from 'next/link';
 import { GetStaticProps, GetStaticPaths } from 'next';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
-import { ArrowLeft, Clock, Tag, Share2, Github } from 'lucide-react';
+import { ArrowLeft, Clock, Tag, Share2, Play } from 'lucide-react';
 import Layout from '../../components/layout/Layout';
 import { getPostBySlug, getAllPostSlugs, type Post } from '../../lib/markdown';
 import { imgSrc } from '../../lib/utils';
 
 interface Props {
   post: Post;
+}
+
+function toEmbedUrl(url: string): string | null {
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  return null;
 }
 
 export default function BlogPost({ post }: Props) {
@@ -105,6 +113,24 @@ export default function BlogPost({ post }: Props) {
               Bagikan
             </button>
           </div>
+
+          {/* Video embed */}
+          {post.videoUrl && toEmbedUrl(post.videoUrl) && (
+            <div className="mb-10">
+              <div className="flex items-center gap-2 mb-3">
+                <Play size={12} className="text-primary-500" />
+                <span className="text-xs font-mono text-primary-500 uppercase tracking-widest">Video Demonstrasi</span>
+              </div>
+              <div className="relative w-full border border-dark-700 overflow-hidden" style={{ paddingBottom: '56.25%' }}>
+                <iframe
+                  src={toEmbedUrl(post.videoUrl)!}
+                  className="absolute inset-0 w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          )}
 
           {/* Content */}
           <div

@@ -27,6 +27,7 @@ collections:
       - { label: Kategori, name: category, widget: select, options: [Robotics, AI, "Computer Vision", IoT, "Embedded Systems", "3D Design", Software, General], default: General }
       - { label: Tags, name: tags, widget: list, default: [] }
       - { label: Cover Image, name: coverImage, widget: image, required: false }
+      - { label: Video URL (YouTube/Vimeo), name: videoUrl, widget: string, required: false, hint: "Opsional. Tempel URL YouTube atau Vimeo untuk embed video demonstrasi." }
       - { label: "Publish?", name: published, widget: boolean, default: true }
       - { label: Konten Artikel, name: body, widget: markdown }
 
