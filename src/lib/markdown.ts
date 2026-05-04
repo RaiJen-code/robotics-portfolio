@@ -95,6 +95,12 @@ function calculateReadTime(content: string): number {
   return Math.ceil(words / wordsPerMinute);
 }
 
+function toDateString(d: unknown): string {
+  if (!d) return '';
+  if (d instanceof Date) return d.toISOString().split('T')[0];
+  return String(d);
+}
+
 // ── Blog Posts ─────────────────────────────────────────────────────────
 
 export function getAllPostSlugs(): string[] {
@@ -123,7 +129,7 @@ export function getAllPosts(options?: {
       return {
         slug,
         title: data.title || slug,
-        date: data.date || '',
+        date: toDateString(data.date),
         excerpt: data.excerpt || content.slice(0, 160) + '...',
         tags: data.tags || [],
         category: data.category || 'General',
@@ -166,7 +172,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   return {
     slug,
     title: data.title || slug,
-    date: data.date || '',
+    date: toDateString(data.date),
     excerpt: data.excerpt || content.slice(0, 160) + '...',
     tags: data.tags || [],
     category: data.category || 'General',
@@ -213,7 +219,7 @@ export function getAllProjects(category?: string): ProjectMeta[] {
       return {
         slug,
         title: data.title || slug,
-        date: data.date || '',
+        date: toDateString(data.date),
         excerpt: data.excerpt || '',
         tags: data.tags || [],
         category: data.category || 'Robotics',
@@ -250,7 +256,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   return {
     slug,
     title: data.title || slug,
-    date: data.date || '',
+    date: toDateString(data.date),
     excerpt: data.excerpt || '',
     tags: data.tags || [],
     category: data.category || 'Robotics',
