@@ -1,0 +1,55 @@
+backend:
+  name: github
+  repo: RaiJen-code/robotics-portfolio
+  branch: main
+  auth_type: pkce
+  app_id: Ov23li0aStdG9dG9Tgmz
+
+media_folder: public/images/posts
+public_folder: /images/posts
+
+locale: id
+
+collections:
+
+  - name: posts
+    label: Blog Post
+    label_singular: Blog Post
+    folder: content/posts
+    create: true
+    delete: false
+    slug: "{{slug}}"
+    summary: "{{title}} — {{date}}"
+
+    fields:
+      - { label: Judul Artikel, name: title, widget: string }
+      - { label: Ringkasan, name: excerpt, widget: string }
+      - { label: Tanggal Publish, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "DD MMMM YYYY", time_format: false }
+      - { label: Kategori, name: category, widget: select, options: [Robotics, AI, "Computer Vision", IoT, "Embedded Systems", "3D Design", Software, General], default: General }
+      - { label: Tags, name: tags, widget: list, default: [] }
+      - { label: Cover Image, name: coverImage, widget: image, required: false }
+      - { label: "Publish?", name: published, widget: boolean, default: true }
+      - { label: Konten Artikel, name: body, widget: markdown }
+
+  - name: projects
+    label: Portfolio Project
+    label_singular: Portfolio Project
+    folder: content/projects
+    create: true
+    delete: false
+    slug: "{{slug}}"
+    summary: "{{title}} — {{category}}"
+
+    fields:
+      - { label: Judul Project, name: title, widget: string }
+      - { label: Ringkasan, name: excerpt, widget: string }
+      - { label: Tanggal, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "DD MMMM YYYY", time_format: false }
+      - { label: Kategori, name: category, widget: select, options: [Robotics, AI, IoT, "Mechanical Design", Embedded] }
+      - { label: Tags, name: tags, widget: list, default: [] }
+      - { label: Tech Stack, name: tech, widget: list, default: [] }
+      - { label: Cover Image, name: coverImage, widget: image, required: false }
+      - { label: Status, name: status, widget: select, options: [{label: Selesai, value: completed}, {label: "Sedang Berjalan", value: ongoing}, {label: Arsip, value: archived}], default: completed }
+      - { label: "Featured (tampil di Home)", name: featured, widget: boolean, default: false }
+      - { label: GitHub URL, name: githubUrl, widget: string, required: false }
+      - { label: Demo URL, name: demoUrl, widget: string, required: false }
+      - { label: Deskripsi Lengkap, name: body, widget: markdown }
