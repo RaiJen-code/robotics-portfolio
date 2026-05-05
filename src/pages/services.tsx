@@ -50,7 +50,7 @@ const SERVICES = [
       'Resolusi 0.1mm - 0.3mm',
       'Build volume 220x220x250mm',
       'Post processing dasar',
-      'Konsultasi desain gratis',
+      'Desain teknik custom tersedia',
     ],
     pricing: [
       { label: 'Per Gram', price: 'Rp 1.500/g', note: 'Harga material PLA' },
@@ -73,7 +73,6 @@ const SERVICES = [
       'HVS 70/80gsm, Art Paper',
       'Format A4, A3',
       'Hitam putih & berwarna',
-      'Jilid ring/soft cover',
       'Pengiriman area tertentu',
     ],
     pricing: [
@@ -239,7 +238,7 @@ function ServiceForm() {
         </div>
 
         {/* Phone & Budget */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className={`grid grid-cols-1 gap-4 ${form.type === 'consultation' ? 'sm:grid-cols-2' : ''}`}>
           <FormField
             label="No. WhatsApp"
             name="phone"
@@ -248,14 +247,16 @@ function ServiceForm() {
             onChange={handleChange}
             placeholder="08xxxxxxxxxx"
           />
-          <FormField
-            label="Estimasi Budget"
-            name="budget"
-            type="text"
-            value={form.budget}
-            onChange={handleChange}
-            placeholder="Rp 500.000"
-          />
+          {form.type === 'consultation' && (
+            <FormField
+              label="Estimasi Budget"
+              name="budget"
+              type="text"
+              value={form.budget}
+              onChange={handleChange}
+              placeholder="Rp 500.000"
+            />
+          )}
         </div>
 
         {/* Subject */}
