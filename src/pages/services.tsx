@@ -1,7 +1,6 @@
 // src/pages/services.tsx
 import { useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import {
   Cpu, Printer, FileText, Check,
   Upload, Send, AlertCircle, CheckCircle
@@ -17,23 +16,24 @@ const SERVICES = [
   {
     id: 'consultation',
     icon: Cpu,
-    title: 'Konsultasi Teknik',
-    subtitle: 'Technical Consulting',
+    title: 'Project Engineering',
+    subtitle: 'End-to-End Development',
     image: '/images/services/konsultasi.jpg',
-    description: 'Konsultasi teknik 1-on-1 untuk robotics, embedded systems, AI integration, sistem kontrol, atau arsitektur teknikal project kamu. Bisa dilakukan secara online maupun offline.',
+    description: 'Dari konsultasi hingga produk jadi — saya mengerjakan project robotics, embedded systems, AI, dan IoT secara end-to-end. Bisa mulai dari nol, atau bantu di tahap tertentu: analisis, desain, build, testing, sampai handover.',
     features: [
-      'Analisis arsitektur sistem',
-      'Review kode & debugging',
-      'Desain hardware/firmware',
-      'Stack recommendation',
-      'Follow-up via chat',
+      'Analisis kebutuhan & desain sistem',
+      'Pengembangan firmware & software',
+      'Integrasi hardware + software',
+      'Testing, debugging & optimisasi',
+      'Handover lengkap & dokumentasi',
+      'Konsultasi & support pasca-delivery',
     ],
     pricing: [
-      { label: 'Online', price: 'Tersedia', note: 'Google Meet / Zoom / WA Video' },
-      { label: 'Offline', price: 'Tersedia', note: 'Sesuai lokasi & kesepakatan' },
-      { label: 'Harga', price: 'Fleksibel', note: 'Disesuaikan scope & kebutuhan' },
+      { label: 'Konsultasi', price: 'Tersedia', note: 'Online / Offline, harga fleksibel' },
+      { label: 'Custom Project', price: 'By Scope', note: 'Sesuai kompleksitas & timeline' },
+      { label: 'Mode', price: 'Fleksibel', note: 'Full project atau milestone-based' },
     ],
-    badge: 'Paling Populer',
+    badge: 'Konsultasi & Build',
     accentColor: 'border-primary-500/40',
     iconBg: 'bg-primary-500/20 border-primary-500/30',
     iconColor: 'text-primary-500',
